@@ -23,6 +23,9 @@ function debmirror_easy () {
 
 
 function dme_cli_run () {
+  case "$1" in
+    mute ) shift; exec &>/dev/null;;
+  esac
   local RUNMODE="$1"; shift
   local ARG="$1"; shift
   local RUNPLAN=()
@@ -55,7 +58,8 @@ function fail2 () {
 function forall_subdir_configs () {
   local CFG_FN=
   local CFG_NUM=0
-  echo -n "I: launching subdir configs: "
+  LOG_FN=/dev/logfmt CFG_NAME=$'\r' \
+    log_msg I "launching subdir configs: " | tr -d '\n'
   for CFG_FN in [A-Za-z0-9]*/dm-easy.rc; do
     [ -f "$CFG_FN" ] || continue
     let CFG_NUM="$CFG_NUM+1"
@@ -70,13 +74,23 @@ function forall_subdir_configs () {
     [ "$CFG_RV" == 127 ] && break   # no more background jobs
     [ "$CFG_RV" -gt "$MAX_ERR" ] && MAX_ERR="$CFG_RV"
   done
-  echo "I: launch done, max error code = $MAX_ERR"
+  LOG_FN=/dev/null CFG_NAME=$'\r' log_max_err launch; return $?
+}
+
+
+function log_max_err () {
+  local ACTION="$*"
+  if [ "$MAX_ERR" == 0 ]; then
+    log_msg I "$ACTION done: success"
+    return 0
+  fi
+  log_msg E "$ACTION done: max error code = $MAX_ERR"
   return "$MAX_ERR"
 }
 
 
 function setsid_self () {
-  </dev/null setsid "$SELFFILE" "$@" &
+  </dev/null setsid "$SELFFILE" mute "$@" &
   disown $!
   sleep 2   # let early output pass before your shell writes its prompt
   return 0
@@ -147,8 +161,7 @@ function mirror_one_config () {
   done
   [ -n "$REPO_ERR" ] || log_msg W 'no repos defined'
 
-  log_msg P "config done, max error code = $MAX_ERR"
-  return "$MAX_ERR"
+  log_max_err config; return $?
 }
 
 
@@ -186,10 +199,15 @@ function log_msg () {
     return 0
   fi
   MSG="$(date +'%y%m%d-%H%M%S') $LVL: $*"
+  local CFG_NAME_HINT=
+  [ "$CFG_NAME" == $'\r' ] || CFG_NAME_HINT=" [@${CFG_NAME:-E_NO_CONFIG}]"
   case "$LVL" in
     D | P ) ;;
-    I | H ) echo "$MSG [@${CFG_NAME:-E_NO_CONFIG}]";;
-    * ) echo "$MSG [@${CFG_NAME:-E_NO_CONFIG}]" >&2;;
+    I | H ) echo "$MSG$CFG_NAME_HINT";;
+    * ) echo "$MSG$CFG_NAME_HINT" >&2;;
+  esac
+  case "$LOG_FN" in
+    /dev/logfmt | /dev/null ) return 0;;
   esac
   MSG="${MSG//$PWD/.}"
   echo "$MSG" >>"$LOG_FN"; return $?
@@ -332,7 +350,7 @@ function debug_shell_cmd () {
       return 0;;
   esac
   printf '%s\n' "$@" | sed -re '
-    /[^a-z0-9,\/.=-]/s~^([a-z-]+=|)|$~&\x27~g
+    /[^A-Za-z0-9,\/.=-]/s~^([A-Za-z-]+=|)|$~&\x27~g
     1!s~^~  ~'
 }
 
@@ -342,7 +360,7 @@ function array_sed () {
   local A_LINES=()
   eval 'A_LINES=( "${'"$A_NAME"'[@]}" )'
   readarray -t A_LINES < <(printf '%s\n' "${A_LINES[@]}" | LANG=C sed "$@")
-  eval 'A_LINES=( "${'"$A_NAME"'[@]}" )'
+  eval "$A_NAME"'=( "${A_LINES[@]}" )'
   return 0
 }
 

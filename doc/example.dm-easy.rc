@@ -12,11 +12,12 @@ COMPONENTS=(  # --section=
   main
   contrib
   non-free
-  pkgr  # <- default component for packager.io
   )
 
 I18N_LANGS=(
-  de
+  # cz
+  # dk
+  # fr
   )
 
 ARCHS=(
@@ -56,7 +57,6 @@ local NODE_VER=
 for NODE_VER in {06..07}; do
   REPO_URL["nodejs-v$NODE_VER"]="$NODE_BASE${NODE_VER#0}.x/"
 done
-
 
 # You can reset all currently defined REPO_URLs with this helper function:
 clear_repo_urls
