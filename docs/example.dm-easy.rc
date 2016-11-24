@@ -1,0 +1,73 @@
+# -*- coding: utf-8, tab-width: 2, syntax: bash -*-
+
+DISTS=(
+  # Entries that contain spaces and/or "#" are ignored.
+  # You can use this to help your editor sort lines by version number:
+  'Ubuntu 12.04       ' precise
+  'Ubuntu 14.04       ' trusty
+  'Ubuntu 16.04       ' xenial
+  )
+
+COMPONENTS=(  # --section=
+  main
+  contrib
+  non-free
+  pkgr  # <- default component for packager.io
+  )
+
+I18N_LANGS=(
+  de
+  )
+
+ARCHS=(
+  # SRC       # uncomment to also download sources
+  i386
+  amd64
+  )
+
+
+# If your config shall not run on specific conditions,
+# just "return 0" without adding any REPO_URL[]s:
+case "$(hostname --fqdn)" in
+  *.example.net )
+    echo "W: $0: skip: use another FQDN" >&2
+    return 0;;
+esac
+
+# You can also add custom sanity checks and return a failure code:
+if [ "$(date +%F)" == 1823-01-42 ]; then
+  echo "E: to use debmirror, please invent Debian first." >&2
+  return 8
+fi
+
+
+# REPO_URL: path -> baseurl
+# Path is relative to config file; use "." for same directory.
+REPO_URL['go-git-service']='https://deb.packager.io/gh/pkgr/gogs/'
+
+# Space and newline characters in URL are removed for easy multi-line:
+REPO_URL['phusion-passenger']='
+  https://oss-binaries.phusionpassenger.com/apt/passenger/'
+
+# The rc file is source-d in a bash function, so you can define your own
+# local vars. If you need functions, start their name with "rc_".
+local NODE_BASE='https://deb.nodesource.com/node_'
+local NODE_VER=
+for NODE_VER in {06..07}; do
+  REPO_URL["nodejs-v$NODE_VER"]="$NODE_BASE${NODE_VER#0}.x/"
+done
+
+
+# You can reset all currently defined REPO_URLs with this helper function:
+clear_repo_urls
+
+
+
+
+
+
+
+
+
+
+# scroll
