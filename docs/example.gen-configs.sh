@@ -14,8 +14,6 @@ function gen_configs () {
   readarray -t REPOS < <(<<<"${REPOS[0]}" sed -re 's~^\s+~~;s~\s+$~~;/^$/d
     /:\/{2}/!s~\s+~&https://~
     s~\s+~ ~')
-  local CFG_BASE='# -*- coding: utf-8, tab-width: 2 -*-'$'\n'
-  CFG_BASE+='source -- ../defaults.rc || return $?'$'\n'
   local REPO_DIR=
   local REPO_CFG=
   local REPO_URL=
@@ -32,9 +30,14 @@ function gen_configs () {
 function gen_one_config () {
   # echo "$REPO_DIR <- '$REPO_URL'"
   mkdir -p "$REPO_DIR" || return $?
-  REPO_CFG="$REPO_DIR/dm-easy.rc"
+  local REPO_CFG="$REPO_DIR/dm-easy.rc"
+  local CFG_LN=(
+    '# -*- coding: utf-8, tab-width: 2; syntax: bash -*-'
+    "REPO_URL[.]='$REPO_URL'"
+    'source -- ../defaults.rc || return $?'
+    )
   echo -n "$REPO_CFG"$'\t'
-  <<<"${CFG_BASE}REPO_URL[.]='$REPO_URL'" tee -- "$REPO_CFG" \
+  printf '%s\n' "${CFG_LN[@]}" | tee -- "$REPO_CFG" \
     | grep -nFe :// || return 3$(echo 'E: no URL' >&2)
   gen_www_symlinks || return $?
   return 0

@@ -1,0 +1,36 @@
+# -*- coding: utf-8, tab-width: 2, syntax: bash -*-
+
+# DM_PROG=( false )
+
+GNUPGHOME='-'
+ARCHS=( amd64 i386 )
+COMPONENTS=( main )
+I18N_LANGS=( de )
+
+DISTS=(
+  'Ubuntu 12.04       ' precise
+  'Ubuntu 14.04       ' trusty
+  'Ubuntu 16.04       ' xenial
+  )
+
+case "${REPO_URL[.]}" in
+  *'://deb.packager.io/'* )
+    COMPONENTS=( pkgr );;
+esac
+
+local REPO_DIR="$(basename -- "$CFG_DIR")"
+# echo "repo dir: $REPO_DIR"
+case "$REPO_DIR" in
+  go-git-service )
+    array_sed DISTS -re '/^(xenial)$/d';;
+  nodejs-v07 )
+    array_sed DISTS -re '/^(precise)$/d';;
+esac
+
+
+
+
+
+
+
+# scroll
