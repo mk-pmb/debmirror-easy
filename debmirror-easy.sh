@@ -23,29 +23,28 @@ function debmirror_easy () {
 
 
 function dme_cli_run () {
-  case "$1" in
-    mute ) shift; exec &>/dev/null;;
-  esac
-  local RUNMODE="$1"; shift
-  local ARG="$1"; shift
-  local RUNPLAN=()
-  case "$RUNMODE" in
-    one-config )
-      RUNPLAN=( . mirror_one_config "$ARG" );;
-    chdir-to )
-      RUNPLAN=( "$ARG" "$FUNCNAME" "$@" );;
-    chdir-self )
-      RUNPLAN=( "$DME_PATH" "$FUNCNAME" "$ARG" "$@" );;
-    subdirs-fork-wait )
-      RUNPLAN=( "$ARG" forall_subdir_configs mirror_one_config );;
-    subdirs-setsid )
-      RUNPLAN=( "$ARG" forall_subdir_configs setsid_self one-config );;
-    * )
-      echo "E: $0: unsupported runmode: ${RUNMODE:-(none)}" >&2; return 2;;
-  esac
-
-  [ "${RUNPLAN[0]}" == . ] || cd "${RUNPLAN[0]}" || return $?
-  "${RUNPLAN[@]:1}" || return $?
+  local ACTION=
+  while [ "$#" -ge 1 ]; do
+    ACTION="$1"; shift
+    case "$ACTION" in
+      mute ) exec &>/dev/null;;
+      chdir-to )
+        cd "$1" || return $?
+        shift;;
+      chdir-self )
+        cd "$DME_PATH" || return $?;;
+      one-config )
+        mirror_one_config "$@"
+        return $?;;
+      subdirs-fork-wait )
+        forall_subdir_configs mirror_one_config
+        return $?;;
+      subdirs-setsid )
+        forall_subdir_configs setsid_self one-config
+        return $?;;
+      * ) echo "E: $0: unsupported action: ${ACTION:-(none)}" >&2; return 2;;
+    esac
+  done
   return 0
 }
 
