@@ -1,0 +1,26 @@
+# -*- coding: utf-8, tab-width: 2 -*-
+#
+# Example cron config
+# to process configs /var/www/vhosts/example.net/*/dm-easy.rc
+
+SHELL = /bin/bash
+PATH = /sbin:/usr/sbin:/bin:/usr/bin
+debmirror_easy = /var/www/vhosts/example.net/util/dme/debmirror-easy.sh
+
+#  m    h     dom mon dow     user        command
+  66   25      *   *   *      www-data    $debmirror_easy chdir-self chdir-to ../.. subdirs-setsid >/dev/null
+
+# This example file uses a bogus time of day for when to run dm-easy.
+# That's to prevent half-installed copies from hitting popular repos
+# all at the same time.
+# To properly install it, select a custom time of day for each machine
+# where you want to run dm-easy, ideally at random.
+# Put your hour (0..23) in the "h" column (instead of 25), and the
+# minute (0..59) in the "m" column (instead of 66). Your cron probably
+# won't mind leading zeroes, but if in doubt, omit them.
+#
+# Save as /etc/cron.d/debmirror-easy and chown to root:root.
+#
+# If it works, log files should be created within very few minutes after
+# your chosen cron time. In case of errors, cron usually reports them
+# via email and syslog.

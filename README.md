@@ -11,10 +11,21 @@ with logging and automatic repo URL splitting.
 Usage
 -----
 
-:TODO:
+[example config](docs/example.dm-easy.rc),
+[example daily cron job](docs/example.cron.txt)
 
 
 <!--#toc stop="scan" -->
+
+
+
+Known issues
+------------
+
+* `gzip: stdin: not in gzip format` / `Failed: gzip -d <.temp/dists/…`:
+  use [debmirror-pmb](https://github.com/mk-pmb/debmirror-pmb/issues/1).
+
+
 
 
 License

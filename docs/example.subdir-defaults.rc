@@ -1,6 +1,8 @@
 # -*- coding: utf-8, tab-width: 2, syntax: bash -*-
 
-# DM_PROG=( false )
+BETTER_DM="$DME_PATH/../debmirror-pmb/usr/bin/debmirror"
+if [ -f "$BETTER_DM" ]; then DM_PROG=( perl "$BETTER_DM" ); fi
+
 
 GNUPGHOME='-'
 ARCHS=( amd64 i386 )
@@ -8,7 +10,7 @@ COMPONENTS=( main )
 I18N_LANGS=( de )
 
 DISTS=(
-  'Ubuntu 12.04       ' precise
+  'Ubuntu 12.04       ' #precise
   'Ubuntu 14.04       ' trusty
   'Ubuntu 16.04       ' xenial
   )

@@ -1,9 +1,0 @@
-#!/bin/bash
-# -*- coding: utf-8, tab-width: 2 -*-
-
-# "one-config" for /var/www/vhosts/example.net/*/dm-easy.rc:
-
-exec /var/www/vhosts/example.net/util/dme/debmirror-easy.sh \
-  chdir-self chdir-to ../.. subdirs-setsid >/dev/null; exit $?
-
-# exit on same line = no race-condition when editing this file
