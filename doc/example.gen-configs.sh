@@ -7,7 +7,8 @@ function gen_configs () {
     go-git-service      deb.packager.io/gh/pkgr/gogs/
     phusion-passenger   oss-binaries.phusionpassenger.com/apt/passenger/
     nodejs-v06          deb.nodesource.com/node_6.x/
-    nodejs-v07          deb.nodesource.com/node_7.x/
+    nodejs-v08          deb.nodesource.com/node_8.x/
+    nodejs-v10          deb.nodesource.com/node_10.x/
     ' )
   [ -n "$WWW_DIR" ] || WWW_DIR='www-pub'
 
