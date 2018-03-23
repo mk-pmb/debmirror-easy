@@ -9,6 +9,7 @@ function gen_configs () {
     nodejs-v06          deb.nodesource.com/node_6.x/
     nodejs-v08          deb.nodesource.com/node_8.x/
     nodejs-v10          deb.nodesource.com/node_10.x/
+    winehq              dl.winehq.org/wine-builds/ubuntu/
     ' )
   [ -n "$WWW_DIR" ] || WWW_DIR='www-pub'
 
