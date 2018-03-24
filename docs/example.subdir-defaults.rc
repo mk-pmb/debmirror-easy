@@ -23,10 +23,10 @@ esac
 local REPO_DIR="$(basename -- "$CFG_DIR")"
 # echo "repo dir: $REPO_DIR"
 case "$REPO_DIR" in
-  go-git-service )
-    array_sed DISTS -re '/^(xenial)$/d';;
-  nodejs-v07 )
-    array_sed DISTS -re '/^(precise)$/d';;
+  # go-git-service )
+  #   array_sed DISTS -re '/^(xenial)$/d';;
+  nodejs-v10 )
+    array_sed DISTS -re '/^(trusty)$/d';;
 esac
 
 
