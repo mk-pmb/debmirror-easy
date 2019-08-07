@@ -233,27 +233,27 @@ function mirror_one_repo () {
   local SRC_HOST="${BASH_REMATCH[2]}"
   local SRC_PATH="${BASH_REMATCH[3]}"
 
-  local SURVIVE_CLEANUP='--ignore'
+  local DO_NOT_CLEANUP='--ignore'
+  local I18N_RGX="$(printf '%s\n' en "${I18N_LANGS[@]}" \
+    | grep -xPe '[a-zA-Z_\-]+' | LANG=C sort --unique)"
+  I18N_RGX="${I18N_RGX//$'\n'/|}"
   local DM_ARGS=(
     --verbose     # show progress between downloads.
     --method="$SRC_PROTO" --host="$SRC_HOST" --root="${SRC_PATH%/}"
     --passive
     --omit-suite-symlinks
     --rsync-extra=none
-    --i18n --exclude='/Translation-\S*\.bz2$'
-    --include='/Translation-('"$(
-      printf '%s\n' "${I18N_LANGS[@]}" | grep -xPe '[a-zA-Z_\-]+' | tr '\n' '|'
-      )"'en)\S*\.bz2$'
+    --i18n --exclude='/Translation-(?!('"$I18N_RGX"')\b)\S*\.bz2$'
     # --checksums     # verify local file contents on each update check
     --ignore-missing-release
     --ignore-release-gpg
     --ignore-small-errors
     --disable-ssl-verification
     --state-cache-days=2
-    $SURVIVE_CLEANUP='^(?!(pool|dists|project|\.temp)/)'
+    $DO_NOT_CLEANUP='^(?!(pool|dists|project|\.temp)/)'
     # make assurance double sure for most important files:
-    $SURVIVE_CLEANUP='^logs/'
-    $SURVIVE_CLEANUP='^dm-easy\.rc$/'
+    $DO_NOT_CLEANUP='^logs/'
+    $DO_NOT_CLEANUP='^dm-easy\.rc$/'
     )
 
   [ -n "$GNUPGHOME" ] || local GNUPGHOME='gnupg_home'
