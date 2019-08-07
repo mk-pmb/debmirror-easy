@@ -8,7 +8,7 @@ function drop_privileges () {
   echo "W: Running as $RUN_AS! Trying to drop privileges:"
   RUN_AS="$(guess_sane_owner_and_group)"
   [ -n "$RUN_AS" ] || return 4
-  echo "I: Will try to re-exec with sudo as $RUN_AS, args: $*"
+  echo "D: Will try to re-exec with sudo as $RUN_AS, args: $*"
   local SUDO_CMD=(
     sudo
     --non-interactive

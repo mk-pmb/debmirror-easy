@@ -10,9 +10,10 @@ DISTS=(
   )
 
 COMPONENTS=(  # --section=
+  # ATTN: [2019-08-07] dm will fail ALL sections if ANY of them doesn't exist!
   main
-  contrib
-  non-free
+  # contrib
+  # non-free
   )
 
 I18N_LANGS=(
