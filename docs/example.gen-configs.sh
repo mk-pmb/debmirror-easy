@@ -3,22 +3,17 @@
 
 
 function gen_configs () {
-  local REPOS=( '
-    go-git-service      deb.packager.io/gh/pkgr/gogs/
-    phusion-passenger   oss-binaries.phusionpassenger.com/apt/passenger/
-    nodejs-v06          deb.nodesource.com/node_6.x/
-    nodejs-v08          deb.nodesource.com/node_8.x/
-    nodejs-v10          deb.nodesource.com/node_10.x/
-    winehq              dl.winehq.org/wine-builds/ubuntu/
-    ' )
+  local SELFPATH="$(readlink -m "$BASH_SOURCE"/..)"
   [ -n "$WWW_DIR" ] || WWW_DIR='www-pub'
 
-  readarray -t REPOS < <(<<<"${REPOS[0]}" sed -re 's~^\s+~~;s~\s+$~~;/^$/d
-    /:\/{2}/!s~\s+~&https://~
-    s~\s+~ ~')
-  local REPO_DIR=
-  local REPO_CFG=
-  local REPO_URL=
+  local DUMP_RC=( "$SELFPATH"/../dump_rc_repo_urls.sh )
+  if [ -z "$DME_RC" ]; then
+    local DME_RC="$SELFPATH"/example.dm-easy.rc
+    DUMP_RC+=( --ignore-clear )
+  fi
+  local REPOS=()
+  readarray -t  REPOS < <("${DUMP_RC[@]}" "$DME_RC")
+  local REPO_DIR= REPO_CFG= REPO_URL=
   for REPO_DIR in "${REPOS[@]}"; do
     [ -n "$REPO_DIR" ] || continue
     REPO_URL="${REPO_DIR#* }"
@@ -34,7 +29,7 @@ function gen_one_config () {
   mkdir -p "$REPO_DIR" || return $?
   local REPO_CFG="$REPO_DIR/dm-easy.rc"
   local CFG_LN=(
-    '# -*- coding: utf-8, tab-width: 2; syntax: bash -*-'
+    '# -*- coding: utf-8, tab-width: 2, syntax: bash -*-'
     "REPO_URL[.]='$REPO_URL'"
     'source -- ../defaults.rc || return $?'
     )

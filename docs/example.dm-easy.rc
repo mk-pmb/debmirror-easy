@@ -3,7 +3,7 @@
 DISTS=(
   # Entries that contain spaces and/or "#" are ignored.
   # You can use this to help your editor sort lines by version number:
-  # 'Ubuntu 12.04       ' precise
+  'Ubuntu 12.04       ' #precise
   'Ubuntu 14.04       ' trusty
   'Ubuntu 16.04       ' xenial
   'Ubuntu 18.04       ' bionic
@@ -17,7 +17,9 @@ COMPONENTS=(  # --section=
 
 I18N_LANGS=(
   # cz
+  # de
   # dk
+  en
   # fr
   )
 
@@ -55,9 +57,18 @@ REPO_URL['phusion-passenger']='
 # local vars. If you need functions, start their name with "rc_".
 local NODE_BASE='https://deb.nodesource.com/node_'
 local NODE_VER=
-for NODE_VER in {10..12}; do
+for NODE_VER in 10 12; do
   REPO_URL["nodejs-v$NODE_VER"]="$NODE_BASE${NODE_VER#0}.x/"
 done
+
+
+# Some other useful repos
+REPO_URL+=(
+  [winehq]='https://dl.winehq.org/wine-builds/ubuntu/'
+  )
+
+
+
 
 # You can reset all currently defined REPO_URLs with this helper function:
 clear_repo_urls

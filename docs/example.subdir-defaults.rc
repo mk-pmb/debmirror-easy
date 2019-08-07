@@ -1,24 +1,17 @@
 # -*- coding: utf-8, tab-width: 2, syntax: bash -*-
 
+local SUBDIR_REPO_URL="${REPO_URL[.]}"
+source -- "$DME_PATH/docs/example.dm-easy.rc" || return $?
 BETTER_DM="$DME_PATH/../debmirror-pmb/usr/bin/debmirror"
 if [ -f "$BETTER_DM" ]; then DM_PROG=( perl "$BETTER_DM" ); fi
 
-
 GNUPGHOME='-'
-ARCHS=( amd64 i386 )
-COMPONENTS=( main )
-I18N_LANGS=( de )
 
-DISTS=(
-  'Ubuntu 12.04       ' #precise
-  'Ubuntu 14.04       ' trusty
-  'Ubuntu 16.04       ' xenial
-  )
-
-case "${REPO_URL[.]}" in
+case "$SUBDIR_REPO_URL" in
   *'://deb.packager.io/'* )
     COMPONENTS=( pkgr );;
 esac
+REPO_URL[.]="$SUBDIR_REPO_URL"
 
 local REPO_DIR="$(basename -- "$CFG_DIR")"
 # echo "repo dir: $REPO_DIR"
