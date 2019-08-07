@@ -1,8 +1,12 @@
 ﻿
+<!--#echo json="package.json" key="name" underline="=" -->
 debmirror-easy
 ==============
+<!--/#echo -->
 
+<!--#echo json="package.json" key="description" -->
 Helps me mirror Debian package repositories.
+<!--/#echo -->
 
 Launch multiple instances of debmirror according to your config files,
 with logging and automatic repo URL splitting.
