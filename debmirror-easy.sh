@@ -10,7 +10,7 @@ function debmirror_easy () {
   local DBGLV="${DEBUGLEVEL:-0}"
 
   source -- "$DME_PATH"/src/lib_uproot.sh --lib || return $?
-  drop_privileges "$@" || return $?
+  drop_privileges chdir-to "$PWD" "$@" || return $?
 
   local DM_PROG=( debmirror )
   local LNBUF_CMD=()
@@ -29,10 +29,10 @@ function dme_cli_run () {
     case "$ACTION" in
       mute ) exec &>/dev/null;;
       chdir-to )
-        cd "$1" || return $?
+        cd -- "$1" || return $?
         shift;;
       chdir-self )
-        cd "$DME_PATH" || return $?;;
+        cd -- "$DME_PATH" || return $?;;
       one-config )
         mirror_one_config "$@"
         return $?;;
@@ -42,10 +42,12 @@ function dme_cli_run () {
       subdirs-setsid )
         forall_subdir_configs setsid_self one-config
         return $?;;
+      eval )
+        ACTION="$1"; shift
+        eval "$ACTION" || return $?;;
       * ) echo "E: $0: unsupported action: ${ACTION:-(none)}" >&2; return 2;;
     esac
   done
-  return 0
 }
 
 
@@ -92,7 +94,6 @@ function setsid_self () {
   </dev/null setsid "$SELFFILE" mute "$@" &
   disown $!
   sleep 2   # let early output pass before your shell writes its prompt
-  return 0
 }
 
 
@@ -108,8 +109,9 @@ function mirror_one_config () {
   fi
   [ -f "$CFG_FN" ] || return $?$(echo "E: no such config: $CFG_FN" >&2)
   local CFG_DIR="$(dirname -- "$CFG_FN")"
-  cd "$CFG_DIR" || return $?$(fail2 "chdir to config: $CFG_FN")
-  cd "$PWD" || return $?$(fail2 "re-chdir to config: $PWD ($CFG_FN)")
+  cd -- "$CFG_DIR" || return $?$(fail2 "chdir to config: $CFG_FN")
+  cd -- "$PWD" || return $?$(fail2 "re-chdir to config: $PWD ($CFG_FN)")
+  # ^-- make sure we can reach it from /
   CFG_DIR="$PWD"
   local CFG_BFN="$(basename -- "$CFG_FN")"
   local CFG_NAME="$CFG_DIR"
@@ -176,7 +178,6 @@ function rotate_log_symlinks () {
   [ -L "$LOG_CRNT" ] && rm $VERBO -- "$LOG_CRNT"
   ln $VERBO --symbolic --no-target-directory \
     -- "$LOG_SUBDIR$LOG_BFN" "$LOG_CRNT"
-  return 0
 }
 
 
@@ -300,16 +301,17 @@ function fail_repo () {
 
 
 function sanity_check_dist_dirs () {
-  local DIST=
-  local FN=
+  local DIST= FN=
+  local MISS=()
   for DIST in "${DISTS[@]}"; do
     case "$DIST" in
       '' | *' '* | *'#'* ) continue;;
     esac
     FN="$REPO_DIR"/dists/"$DIST"/Release
-    [ -f "$FN" ] || log_msg W "Release file missing: $FN"
+    [ -f "$FN" ] || MISS+=( "$FN" )
   done
-  return 0
+  [ -z "${MISS[0]}" ] || log_msg W \
+    "Missing release files (check the logs for details): ${MISS[*]}"
 }
 
 
@@ -360,7 +362,6 @@ function array_sed () {
   eval 'A_LINES=( "${'"$A_NAME"'[@]}" )'
   readarray -t A_LINES < <(printf '%s\n' "${A_LINES[@]}" | LANG=C sed "$@")
   eval "$A_NAME"'=( "${A_LINES[@]}" )'
-  return 0
 }
 
 
