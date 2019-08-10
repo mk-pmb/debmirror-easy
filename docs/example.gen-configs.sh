@@ -4,7 +4,6 @@
 
 function gen_configs () {
   local SELFPATH="$(readlink -m "$BASH_SOURCE"/..)"
-  [ -n "$WWW_DIR" ] || WWW_DIR='www-pub'
 
   local DUMP_RC=( "$SELFPATH"/../dump_rc_repo_urls.sh )
   if [ -z "$DME_RC" ]; then
@@ -20,13 +19,12 @@ function gen_configs () {
     REPO_DIR="${REPO_DIR%% *}"
     gen_one_config || return $?
   done
-  return 0
 }
 
 
 function gen_one_config () {
   # echo "$REPO_DIR <- '$REPO_URL'"
-  mkdir -p "$REPO_DIR" || return $?
+  mkdir --parents -- "$REPO_DIR" || return $?
   local REPO_CFG="$REPO_DIR/dm-easy.rc"
   local CFG_LN=(
     '# -*- coding: utf-8, tab-width: 2, syntax: bash -*-'
@@ -37,25 +35,33 @@ function gen_one_config () {
   printf '%s\n' "${CFG_LN[@]}" | tee -- "$REPO_CFG" \
     | grep -nFe :// || return 3$(echo 'E: no URL' >&2)
   gen_www_symlinks || return $?
-  return 0
 }
 
 
 function gen_www_symlinks () {
-  [ -d "$WWW_DIR" ] || return 0
-  local WWW_UP="${REPO_DIR%/}"
+  [ -n "$WWW_DIR" ] || return 0
+  [ -d "$WWW_DIR" ] || return 3$(
+    echo "E: Your WWW_DIR is not a directory: '$WWW_DIR'" >&2)
+  local WWW_UP="$WWW_DIR" REPOS_SUB= COMMON_PARENT="$(readlink -m .)"
+  WWW_UP="${WWW_UP%/}/"
+  while [ "${WWW_UP:0:3}" == ../ ]; do
+    WWW_UP="${WWW_UP:3}"
+    REPOS_SUB="$(basename -- "$COMMON_PARENT")/"
+    COMMON_PARENT="$(dirname -- "$COMMON_PARENT")"
+  done
+  WWW_UP="${REPO_DIR%/}"
   WWW_UP="${WWW_UP//[^\/]/}//"
-  WWW_UP="${WWW_UP//\//..\/}$REPO_DIR"
+  WWW_UP="${WWW_UP//\//..\/}${REPOS_SUB}${REPO_DIR}"
   local LINKS=(
     dists
     pool
     log.latest.txt=logs/dm-easy.crnt.log
     log.previous.txt=logs/dm-easy.prev.log
     )
-  local WWW_SUB="$WWW_DIR/$REPO_DIR"
-  mkdir -p "$WWW_SUB"
-  local LINK_NAME=
-  local LINK_DEST=
+  local WWW_SUB="${WWW_DIR}${REPO_DIR}"
+  mkdir --parents -- "$WWW_SUB"
+  local CREATED=( . )
+  local LINK_NAME= LINK_DEST=
   for LINK_NAME in "${LINKS[@]}"; do
     LINK_DEST="$WWW_UP/${LINK_NAME#*=}"
     LINK_NAME="$WWW_SUB/${LINK_NAME%%=*}"
@@ -66,8 +72,9 @@ function gen_www_symlinks () {
         LANG=C ls --color=always -l "$LINK_NAME" | sed -re '
           s~^[^\x1B]*(\x1B)~\1~;s~^~\t~';;
     esac
+    CREATED=( "$LINK_NAME" )
   done
-  return 0
+  # sudo --non-interactive chown --{no-de,}reference . -- "${CREATED[@]}"
 }
 
 
