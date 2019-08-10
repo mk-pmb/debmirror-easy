@@ -16,10 +16,11 @@ REPO_URL[.]="$SUBDIR_REPO_URL"
 local REPO_DIR="$(basename -- "$CFG_DIR")"
 # echo "repo dir: $REPO_DIR"
 case "$REPO_DIR" in
+  '' ) ;;
   # go-git-service )
   #   array_sed DISTS -re '/^(xenial)$/d';;
-  nodejs-v10 )
-    array_sed DISTS -re '/^(trusty)$/d';;
+  # nodejs-v10 )
+  #   array_sed DISTS -re '/^(trusty)$/d';;
 esac
 
 
