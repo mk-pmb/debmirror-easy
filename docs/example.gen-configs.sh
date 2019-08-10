@@ -42,6 +42,7 @@ function gen_www_symlinks () {
   [ -n "$WWW_DIR" ] || return 0
   [ -d "$WWW_DIR" ] || return 3$(
     echo "E: Your WWW_DIR is not a directory: '$WWW_DIR'" >&2)
+  WWW_DIR="${WWW_DIR%/}/"
   local WWW_UP="$WWW_DIR" REPOS_SUB= COMMON_PARENT="$(readlink -m .)"
   WWW_UP="${WWW_UP%/}/"
   while [ "${WWW_UP:0:3}" == ../ ]; do
