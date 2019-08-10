@@ -16,11 +16,12 @@ REPO_URL[.]="$SUBDIR_REPO_URL"
 local REPO_DIR="$(basename -- "$CFG_DIR")"
 # echo "repo dir: $REPO_DIR"
 case "$REPO_DIR" in
-  '' ) ;;
   # go-git-service )
   #   array_sed DISTS -re '/^(xenial)$/d';;
-  # nodejs-v10 )
-  #   array_sed DISTS -re '/^(trusty)$/d';;
+  nodejs-v[1-9][0-9] )
+    # Starting at v10, the i386 support declared in NodeSource's Release file
+    # is a lie. That's what you get for using unofficial install methods.
+    array_sed ARCHS -re '/^(i386)$/d';;
 esac
 
 
