@@ -4,9 +4,10 @@ DISTS=(
   # Entries that contain spaces and/or "#" are ignored.
   # You can use this to help your editor sort lines by version number:
   'Ubuntu 12.04       ' #precise
-  'Ubuntu 14.04       ' trusty
+  'Ubuntu 14.04       ' #trusty
   'Ubuntu 16.04       ' xenial
   'Ubuntu 18.04       ' bionic
+  'Ubuntu 20.04       ' focal
   )
 
 COMPONENTS=(  # --section=
