@@ -306,6 +306,7 @@ function sanity_check_dist_dirs () {
   for DIST in "${DISTS[@]}"; do
     case "$DIST" in
       '' | *' '* | *'#'* ) continue;;
+      --exotic=* ) DIST="${DIST#*=}";;
     esac
     FN="$REPO_DIR"/dists/"$DIST"/Release
     [ -f "$FN" ] || MISS+=( "$FN" )
@@ -325,6 +326,8 @@ function dm_args_id_comma_list () {
       *' '* | *'#'* ) ;;
       SRC ) SRC_OPT='--source';;
       [a-z]* ) ARGS+="$ARG,";;
+      --exotic=* ) ARGS+="${ARG#*=},";;
+      * ) echo "E: $FUNCNAME: unsupported item format: '$ARG'" >&2; return 3;;
     esac
   done
   [ -n "$ARGS" ] || return 4$(fail_repo "no values for $OPT")
