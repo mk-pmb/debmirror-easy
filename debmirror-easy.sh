@@ -275,9 +275,9 @@ function mirror_one_repo () {
   [ -n "$SRC_USER$SRC_PASS" ] && DM_ARGS+=(
     --user="$SRC_USER" --passwd="$SRC_PASS" )
   [ -n "$SRC_PROXY" ] && DM_ARGS+=( --proxy="${SRC_PROXY#-}" )
-  DM_ARGS_id_comma_list --dist= "${DISTS[@]}" || return $?
-  DM_ARGS_id_comma_list --arch= "${ARCHS[@]}" || return $?
-  DM_ARGS_id_comma_list --section= "${COMPONENTS[@]}" || return $?
+  dm_args_id_comma_list --dist= "${DISTS[@]}" || return $?
+  dm_args_id_comma_list --arch= "${ARCHS[@]}" || return $?
+  dm_args_id_comma_list --section= "${COMPONENTS[@]}" || return $?
   DM_ARGS+=( -- "$REPO_DIR" )
 
   log_msg D "line-buffer adjustor: $(debug_shell_cmd -1 "${LNBUF_CMD[@]}")"
@@ -315,7 +315,7 @@ function sanity_check_dist_dirs () {
 }
 
 
-function DM_ARGS_id_comma_list () {
+function dm_args_id_comma_list () {
   local LIST_OPT="$1"; shift
   local ARGS=
   local ARG=
