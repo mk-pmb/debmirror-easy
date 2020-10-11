@@ -3,7 +3,10 @@
 
 
 function gen_configs () {
-  local SELFPATH="$(readlink -m "$BASH_SOURCE"/..)"
+  local SELFFILE="$(readlink -m -- "$BASH_SOURCE")"
+  local SELFPATH="$(dirname -- "$SELFFILE")"
+  local SELFNAME="$(basename -- "$SELFFILE")"
+  local BANNER="Created using $SELFNAME with WWW_DIR=$WWW_DIR"
 
   local DUMP_RC=( "$SELFPATH"/../dump_rc_repo_urls.sh )
   if [ -z "$DME_RC" ]; then
@@ -28,6 +31,7 @@ function gen_one_config () {
   local REPO_CFG="$REPO_DIR/dm-easy.rc"
   local CFG_LN=(
     '# -*- coding: utf-8, tab-width: 2, syntax: bash -*-'
+    "# $BANNER"
     "REPO_URL[.]='$REPO_URL'"
     'source -- ../defaults.rc || return $?'
     )
