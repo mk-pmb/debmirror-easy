@@ -233,12 +233,15 @@ function mirror_one_repo () {
   local SRC_HOST="${BASH_REMATCH[2]}"
   local SRC_PATH="${BASH_REMATCH[3]}"
 
-  local DO_NOT_CLEANUP='--ignore'
   local I18N_RGX="$(printf '%s\n' en "${I18N_LANGS[@]}" \
     | grep -xPe '[a-zA-Z_\-]+' | LANG=C sort --unique)"
   I18N_RGX="${I18N_RGX//$'\n'/|}"
   local DM_ARGS=(
     --verbose     # show progress between downloads.
+    )
+  [ "$DBGLV" -ge 4 ] && DM_ARGS+=( --debug )
+
+  DM_ARGS+=(
     --method="$SRC_PROTO" --host="$SRC_HOST" --root="${SRC_PATH%/}"
     --passive
     --omit-suite-symlinks
@@ -250,6 +253,10 @@ function mirror_one_repo () {
     --ignore-small-errors
     --disable-ssl-verification
     --state-cache-days=2
+    )
+
+  local DO_NOT_CLEANUP='--ignore'
+  DM_ARGS+=(
     $DO_NOT_CLEANUP='^(?!(pool|dists|project|\.temp)/)'
     # make assurance double sure for most important files:
     $DO_NOT_CLEANUP='^logs/'
