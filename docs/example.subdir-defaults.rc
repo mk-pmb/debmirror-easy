@@ -18,10 +18,21 @@ local REPO_DIR="$(basename -- "$CFG_DIR")"
 case "$REPO_DIR" in
   # go-git-service )
   #   array_sed DISTS -re '/^(xenial)$/d';;
+
   nodejs-v[1-9][0-9] )
     # Starting at v10, the i386 support declared in NodeSource's Release file
     # is a lie. That's what you get for using unofficial install methods.
     array_sed ARCHS -re '/^(i386)$/d';;
+
+  waterfox-ubu* )
+    ARCHS=( amd64 )
+    DISTS=( "xUbuntu_${REPO_DIR#*-ubu}" )
+    export DM_EVAL_HTTPGET_MODIFY_URL='
+      s~(/waterfox/[\w\.]+/)(dists/[\w\.]+/(main/binary-amd64/|)|)~$1~;
+      '
+    # On the mirror webspace, additionally to the "dists" symlink, you'll
+    # also need symlinks for: all amd64 Packages* Release*
+    ;;
 esac
 
 

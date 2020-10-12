@@ -64,6 +64,16 @@ for NODE_VER in 10 12; do
 done
 
 
+# Waterfox, rather than using a "dists" subdirectory in its repo,
+# has a separate repo per Ubuntu version.
+local WAFO_BASE='https://download.opensuse.org/repositories/
+  home:/hawkeye116477:/waterfox/xUbuntu_'
+local WAFO_UBU=
+for WAFO_UBU in {18..20..2}.04; do
+  REPO_URL["waterfox-ubu$WAFO_UBU"]="${WAFO_BASE}${WAFO_UBU}/"
+done
+
+
 # Some other useful repos
 REPO_URL+=(
   [winehq]='https://dl.winehq.org/wine-builds/ubuntu/'
