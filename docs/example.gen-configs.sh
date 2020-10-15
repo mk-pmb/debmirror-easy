@@ -62,6 +62,9 @@ function gen_www_symlinks () {
     pool
     log.latest.txt=logs/dm-easy.crnt.log
     log.previous.txt=logs/dm-easy.prev.log
+    "${ARCHS[@]}" all
+    Packages{,.gz}
+    Release{,.gpg}
     )
   local WWW_SUB="${WWW_DIR}${REPO_DIR}"
   mkdir --parents -- "$WWW_SUB"
