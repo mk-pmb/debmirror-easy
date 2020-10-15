@@ -131,7 +131,7 @@ function mirror_one_config () {
   local COMPONENTS=()
   local I18N_LANGS=()
   local ARCHS=()
-  local -A REPO_URL
+  local -A REPO_URL=()
   local GNUPGHOME=
 
   local COPROC=()  # child_stdout child_stdin (no stderr)

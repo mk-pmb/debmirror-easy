@@ -33,26 +33,26 @@ function gen_one_config () {
     '# -*- coding: utf-8, tab-width: 2, syntax: bash -*-'
     "# $BANNER"
     "REPO_URL[.]='$REPO_URL'"
-    'source ../defaults.rc || return $?'
+    'source -- ../defaults.rc || return $?'
     )
   echo -n "$REPO_CFG"$'\t'
-  printf '%s\n' "${CFG_LN[@]}" | tee "$REPO_CFG" \
+  printf '%s\n' "${CFG_LN[@]}" | tee -- "$REPO_CFG" \
     | grep -nFe :// || return 3$(echo 'E: no URL' >&2)
   gen_www_symlinks || return $?
 }
 
 
-function  gen_www_symlinks () {
+function gen_www_symlinks () {
   [ -n "$WWW_DIR" ] || return 0
   [ -d "$WWW_DIR" ] || return 3$(
     echo "E: Your WWW_DIR is not a directory: '$WWW_DIR'" >&2)
   WWW_DIR="${WWW_DIR%/}/"
-  local WWW_UP="$WWW_DIR" REPOS_SUB= COMMON_PARENT="$(readlink -m "$PWD")"
+  local WWW_UP="$WWW_DIR" REPOS_SUB= COMMON_PARENT="$(readlink -m -- "$PWD")"
   WWW_UP="${WWW_UP%/}/"
   while [ "${WWW_UP:0:3}" == ../ ]; do
     WWW_UP="${WWW_UP:3}"
-    REPOS_SUB="$(basename "$COMMON_PARENT")/"
-    COMMON_PARENT="$(dirname "$COMMON_PARENT")"
+    REPOS_SUB="$(basename -- "$COMMON_PARENT")/"
+    COMMON_PARENT="$(dirname -- "$COMMON_PARENT")"
   done
   WWW_UP="${REPO_DIR%/}"
   WWW_UP="${WWW_UP//[^\/]/}//"
