@@ -1,17 +1,22 @@
 #!/bin/bash
 # -*- coding: utf-8, tab-width: 2 -*-
 
-function dump_rc_repo_urls () {
+
+function clear_repo_urls () { true; }
+
+
+function dump_rc () {
   export LANG{,UAGE}=en_US.UTF-8  # make error messages search engine-friendly
+  local TOPIC="$1"; shift
   local RC="$1"; shift
-  case "$RC" in
-    --ignore-clear )
-      function clear_repo_urls () { true; }
-      RC="$1"; shift
-      ;;
-  esac
   local -A REPO_URL=()
+  [ -n "$RC" ] || return 3$(echo "E: no rc filename given" >&2)
   source -- "$RC" || return $?
+  "${FUNCNAME}__$TOPIC" "$@" || return $?
+}
+
+
+function dump_rc__repo_urls () {
   local KEY= URL=
   for KEY in "${!REPO_URL[@]}"; do
     URL="${REPO_URL[$KEY]}"
@@ -21,4 +26,4 @@ function dump_rc_repo_urls () {
 }
 
 
-dump_rc_repo_urls "$@"; exit $?
+dump_rc "$@"; exit $?
