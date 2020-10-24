@@ -27,7 +27,10 @@ function gen_configs () {
 
 function gen_one_config () {
   # echo "$REPO_DIR <- '$REPO_URL'"
-  mkdir --parents -- "$REPO_DIR" || return $?
+  mkdir --parents -- "$REPO_DIR"/logs || return $?
+  # Ensure logs exist, to have immediate positive feedback on the webspace.
+  >>"$REPO_DIR"/logs/dm-easy.crnt.log
+  >>"$REPO_DIR"/logs/dm-easy.prev.log
   local REPO_CFG="$REPO_DIR/dm-easy.rc"
   local CFG_LN=(
     '# -*- coding: utf-8, tab-width: 2, syntax: bash -*-'
