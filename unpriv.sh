@@ -7,7 +7,7 @@ function unpriv () {
   local SELFFILE="$(readlink -m "$BASH_SOURCE")"
   local DME_PATH="$(dirname "$SELFFILE")"
 
-  source "$DME_PATH"/lib_uproot.sh --lib || return $?
+  source "$DME_PATH"/src/lib_uproot.sh --lib || return $?
 
   local RUNMODE="$1"; shift
 

@@ -9,7 +9,7 @@ function debmirror_easy () {
   local DME_PATH="$(dirname "$SELFFILE")"
   local DBGLV="${DEBUGLEVEL:-0}"
 
-  source "$DME_PATH"/lib_uproot.sh --lib || return $?
+  source "$DME_PATH"/src/lib_uproot.sh --lib || return $?
   drop_privileges chdir-to "$PWD" "$@" || return $?
 
   local DM_PROG=( debmirror )
