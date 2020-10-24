@@ -8,13 +8,12 @@ function gen_configs () {
   local SELFNAME="$(basename -- "$SELFFILE")"
   local BANNER="Created using $SELFNAME with WWW_DIR=$WWW_DIR"
 
-  local DUMP_RC=( "$SELFPATH"/../dump_rc_repo_urls.sh )
   if [ -z "$DME_RC" ]; then
     local DME_RC="$SELFPATH"/example.dm-easy.rc
-    DUMP_RC+=( --ignore-clear )
   fi
+  local DUMP_RC="$SELFPATH"/../src/dump_rc.sh
   local REPOS=()
-  readarray -t  REPOS < <("${DUMP_RC[@]}" "$DME_RC")
+  readarray -t  REPOS < <("$DUMP_RC" repo_urls "$DME_RC")
   local REPO_DIR= REPO_CFG= REPO_URL=
   for REPO_DIR in "${REPOS[@]}"; do
     [ -n "$REPO_DIR" ] || continue
