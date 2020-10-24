@@ -10,6 +10,7 @@ function debmirror_easy () {
   local DBGLV="${DEBUGLEVEL:-0}"
 
   source -- "$DME_PATH"/src/lib_uproot.sh --lib || return $?
+  source -- "$DME_PATH"/src/lib_rc_util.sh --lib || return $?
   drop_privileges chdir-to "$PWD" "$@" || return $?
 
   local DM_PROG=( debmirror )
@@ -97,14 +98,9 @@ function setsid_self () {
 }
 
 
-function str_ends_with () {
-  [ "$1" != "${1%$2}" ]; return $?
-}
-
-
 function mirror_one_config () {
   local CFG_FN="$1"
-  if [ -d "$CFG_FN" ] || str_ends_with "$CFG_FN" /; then
+  if [ -d "$CFG_FN" ] || [[ "$CFG_FN" == */ ]]; then
     CFG_FN="${CFG_FN%/}/dm-easy.rc"
   fi
   [ -f "$CFG_FN" ] || return $?$(echo "E: no such config: $CFG_FN" >&2)
@@ -181,12 +177,7 @@ function rotate_log_symlinks () {
 }
 
 
-function clear_repo_urls () {
-  local REPO_DIR=
-  for REPO_DIR in "${!REPO_URL[@]}"; do
-    unset REPO_URL["$REPO_DIR"]
-  done
-}
+function clear_repo_urls () { REPO_URL=(); }
 
 
 function log_msg () {
@@ -363,15 +354,6 @@ function debug_shell_cmd () {
   printf '%s\n' "$@" | sed -re '
     /[^A-Za-z0-9,\/.=-]/s~^([A-Za-z-]+=|)|$~&\x27~g
     1!s~^~  ~'
-}
-
-
-function array_sed () {
-  local A_NAME="$1"; shift
-  local A_LINES=()
-  eval 'A_LINES=( "${'"$A_NAME"'[@]}" )'
-  readarray -t A_LINES < <(printf '%s\n' "${A_LINES[@]}" | LANG=C sed "$@")
-  eval "$A_NAME"'=( "${A_LINES[@]}" )'
 }
 
 
