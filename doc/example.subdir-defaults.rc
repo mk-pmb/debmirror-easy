@@ -19,13 +19,12 @@ case "$REPO_DIR" in
   # go-git-service )
   #   array_sed DISTS -re '/^(xenial)$/d';;
 
-  nodejs-v[1-9][0-9] )
-    # Starting at v10, the i386 support declared in NodeSource's Release file
-    # is a lie. That's what you get for using unofficial install methods.
-    array_sed ARCHS -re '/^(i386)$/d';;
+  # nodejs-v[1-9][0-9] )
+  #   # Starting at v10, the i386 support declared in NodeSource's Release file
+  #   # is a lie. That's what you get for using unofficial install methods.
+  #   array_sed ARCHS -re '/^(i386)$/d';;
 
   waterfox-ubu* )
-    ARCHS=( amd64 )
     DISTS=( "xUbuntu_${REPO_DIR#*-ubu}" )
     REPO_CFG[flatdir]=+
     export DM_EVAL_HTTPGET_MODIFY_URL='
