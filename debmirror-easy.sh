@@ -232,8 +232,9 @@ function mirror_one_repo () {
     )
   [ "$DBGLV" -ge 4 ] && DM_ARGS+=( --debug )
 
+  [ "$SRC_PATH" == / ] || SRC_PATH="${SRC_PATH%/}"
   DM_ARGS+=(
-    --method="$SRC_PROTO" --host="$SRC_HOST" --root="${SRC_PATH%/}"
+    --method="$SRC_PROTO" --host="$SRC_HOST" --root="$SRC_PATH"
     --passive
     --omit-suite-symlinks
     --rsync-extra=none
