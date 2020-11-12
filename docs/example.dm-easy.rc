@@ -27,7 +27,7 @@ I18N_LANGS=(
 
 ARCHS=(
   # SRC       # uncomment to also download sources
-  i386
+  # i386
   amd64
   )
 
