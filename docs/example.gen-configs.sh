@@ -29,7 +29,8 @@ function gen_configs () {
 function gen_one_config () {
   # echo "$REPO_DIR <- '$REPO_URL'"
   local LOG_DIR="$REPO_DIR"/logs
-  mkdir --parents -- "$ITEM" || return $?
+  mkdir --parents -- "$LOG_DIR" || return $?$(
+    echo "E: Failed to mkdir LOG_DIR='$LOG_DIR'" >&2)
   # Ensure log symlinks exist, to have immediate positive feedback
   # on the webspace.
   local LOG_SYM=
@@ -90,7 +91,8 @@ function gen_www_symlinks () {
     )
 
   local WWW_SUB="${WWW_DIR}${REPO_DIR}"
-  mkdir --parents -- "$WWW_SUB"
+  mkdir --parents -- "$WWW_SUB" || return $?$(
+    echo "E: Failed to mkdir WWW_SUB='$WWW_SUB'" >&2)
 
   [ -z "${REPO_CFG[flatdir]}" ] || gen_www_symlinks__flatdir || return $?
   # local CREATED=( . )
