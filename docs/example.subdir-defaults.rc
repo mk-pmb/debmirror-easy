@@ -33,6 +33,11 @@ case "$REPO_DIR" in
     # On the mirror webspace, additionally to the "dists" symlink, you'll
     # also need symlinks for: all amd64 Packages* Release*
     ;;
+
+  microsoft_vscode | \
+  //stables// )
+    DISTS=( stable )
+    ;;
 esac
 
 

@@ -78,6 +78,7 @@ done
 REPO_URL+=(
   [winehq]='https://dl.winehq.org/wine-builds/ubuntu/'
   [brave-browser]='https://brave-browser-apt-release.s3.brave.com/'
+  [microsoft_vscode]='https://packages.microsoft.com/repos/vscode/'
   )
 
 
