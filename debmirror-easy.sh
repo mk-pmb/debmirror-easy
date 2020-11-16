@@ -4,9 +4,9 @@
 
 function debmirror_easy () {
   export LANG{,UAGE}=en_US.UTF-8
-  local SELFFILE="$(readlink -m "$BASH_SOURCE")"
+  local SELFFILE="$(readlink -m -- "$BASH_SOURCE")"
   local DME_FILE="$SELFFILE"
-  local DME_PATH="$(dirname "$SELFFILE")"
+  local DME_PATH="$(dirname -- "$SELFFILE")"
   local DBGLV="${DEBUGLEVEL:-0}"
 
   source "$DME_PATH"/src/lib_uproot.sh --lib || return $?
@@ -104,12 +104,12 @@ function mirror_one_config () {
     CFG_FN="${CFG_FN%/}/dm-easy.rc"
   fi
   [ -f "$CFG_FN" ] || return $?$(echo "E: no such config: $CFG_FN" >&2)
-  local CFG_DIR="$(dirname "$CFG_FN")"
+  local CFG_DIR="$(dirname -- "$CFG_FN")"
   cd -- "$CFG_DIR" || return $?$(fail2 "chdir to config: $CFG_FN")
   cd -- "$PWD" || return $?$(fail2 "re-chdir to config: $PWD ($CFG_FN)")
   # ^-- make sure we can reach it from /
   CFG_DIR="$PWD"
-  local CFG_BFN="$(basename "$CFG_FN")"
+  local CFG_BFN="$(basename -- "$CFG_FN")"
   local CFG_NAME="$CFG_DIR"
   case "$CFG_NAME" in
     "$HOME" | "$HOME"/* ) CFG_NAME="~${CFG_NAME#$HOME}";;
