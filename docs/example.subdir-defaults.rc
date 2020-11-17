@@ -16,6 +16,12 @@ REPO_URL[.]="$SUBDIR_REPO_URL"
 local REPO_DIR="$(basename -- "$CFG_DIR")"
 # echo "repo dir: $REPO_DIR"
 case "$REPO_DIR" in
+  brave-browser )
+    DISTS+=( stable )
+    # ATTN: The upstream repo has a "focal" dist as well, but that one is
+    #   signed with key 4fe13824e3ffc656 which seems to be deprecated.
+    ;;
+
   # go-git-service )
   #   array_sed DISTS -re '/^(xenial)$/d';;
 
