@@ -76,9 +76,10 @@ done
 
 # Some other useful repos
 REPO_URL+=(
-  [winehq]='https://dl.winehq.org/wine-builds/ubuntu/'
   [brave-browser]='https://brave-browser-apt-release.s3.brave.com/'
+  [docker]='https://download.docker.com/linux/ubuntu'
   [microsoft_vscode]='https://packages.microsoft.com/repos/vscode/'
+  [winehq]='https://dl.winehq.org/wine-builds/ubuntu/'
   )
 
 
