@@ -37,6 +37,7 @@ case "$REPO_DIR" in
 
   waterfox-ubu* )
     DISTS=( "xUbuntu_${REPO_DIR#*-ubu}" )
+    ARCHS=( amd64 )
     REPO_CFG[flatdir]=+
     export DM_EVAL_HTTPGET_MODIFY_URL='
       s~(/waterfox/[\w\.]+/)(dists/[\w\.]+/(main/binary-amd64/|)|)~$1~;
