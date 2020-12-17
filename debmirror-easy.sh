@@ -217,6 +217,11 @@ function mirror_one_repo () {
     return 4
   fi
 
+  local ORIG_URL="$SRC_URL"
+  SRC_URL="$("$DME_PATH"/src/expand_repo_url.sed <<<"$SRC_URL")"
+  [ -n "$SRC_URL" ] || SRC_URL="$ORIG_URL"
+  [ "$SRC_URL" == "$ORIG_URL" ] || log_msg P "repo URL expanded to $SRC_URL"
+
   local URL_RGX='^([a-z]+)://([a-z0-9.-]+)(/\S*$)'
   [[ "$SRC_URL" =~ $URL_RGX ]] || return 4$(
     fail_repo "unsupported source URL syntax: $SRC_URL")
