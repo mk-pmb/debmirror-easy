@@ -47,8 +47,9 @@ function gen_one_config () {
     'source -- ../defaults.rc || return $?'
     )
   echo -n "$REPO_RC"$'\t'
+  local QUOT_URL_RGX="='"'([a-z][a-z0-9+]+://|(ppa):)'
   printf '%s\n' "${CFG_LN[@]}" | tee -- "$REPO_RC" \
-    | grep -nFe :// || return 3$(echo 'E: no URL' >&2)
+    | grep -nPe "$QUOT_URL_RGX" || return 3$(echo 'E: no URL?' >&2)
   gen_www_symlinks || return $?
 }
 

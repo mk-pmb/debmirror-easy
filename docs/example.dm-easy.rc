@@ -81,6 +81,7 @@ REPO_URL+=(
   [brave-browser]='https://brave-browser-apt-release.s3.brave.com/'
   [docker]='https://download.docker.com/linux/ubuntu'
   [microsoft_vscode]='https://packages.microsoft.com/repos/vscode/'
+  [webupd8]='ppa:nilarimogard/webupd8'  # streamlink
   [winehq]='https://dl.winehq.org/wine-builds/ubuntu/'
   )
 
