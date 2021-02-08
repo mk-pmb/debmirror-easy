@@ -38,8 +38,10 @@ esac
 
 # Repos with only a subset of CPU architectures:
 case "$REPO_DIR" in
+  brave-browser | \
   docker | \
   microsoft_vscode | \
+  phusion-passenger | \
   waterfox-ubu* | \
   //no-i386// ) array_sed ARCHS -re '/^(i386)$/d';;
 
@@ -62,6 +64,11 @@ case "$REPO_DIR" in
     # On the mirror webspace, additionally to the "dists" symlink, you'll
     # also need symlinks for: all amd64 Packages* Release*
     ;;
+
+  go-git-service )
+    DISTS=(
+      --exotic=18.04
+      );;
 
 esac
 
