@@ -8,6 +8,7 @@ function debmirror_easy () {
   local DME_FILE="$SELFFILE"
   local DME_PATH="$(dirname -- "$SELFFILE")"
   local DBGLV="${DEBUGLEVEL:-0}"
+  local LOG_SUFFIX_E=
 
   source -- "$DME_PATH"/src/lib_uproot.sh --lib || return $?
   source -- "$DME_PATH"/src/lib_rc_util.sh --lib || return $?
@@ -158,7 +159,7 @@ function mirror_one_config () {
   done
   [ -n "$REPO_ERR" ] || log_msg W 'no repos defined'
 
-  log_max_err config; return $?
+  log_max_err "$FUNCNAME"; return $?
 }
 
 
@@ -193,6 +194,9 @@ function log_msg () {
   local CFG_NAME_HINT=
   [ "$CFG_NAME" == $'\r' ] || CFG_NAME_HINT=" [@${CFG_NAME:-E_NO_CONFIG}]"
   case "$LVL" in
+    E ) MSG+="$LOG_SUFFIX_E";;
+  esac
+  case "$LVL" in
     D | P ) ;;
     I | H ) echo "$MSG$CFG_NAME_HINT";;
     * ) echo "$MSG$CFG_NAME_HINT" >&2;;
@@ -205,12 +209,18 @@ function log_msg () {
 }
 
 
+function vfail () {
+  "$@" || return $?$(log_msg E "vfail: $* -> rv=$?")
+}
+
+
 function source_in_func () {
   source -- "$@"; return $?
 }
 
 
 function mirror_one_repo () {
+  local LOG_SUFFIX_E=" @ dir '$REPO_DIR'"
   log_msg P "start mirror: $REPO_DIR <- $SRC_URL"
   if [ -z "${DM_PROG[*]}" ]; then
     log_msg E 'no DM_PROG'
@@ -224,7 +234,7 @@ function mirror_one_repo () {
 
   local URL_RGX='^([a-z]+)://([a-z0-9.-]+)(/\S*$)'
   [[ "$SRC_URL" =~ $URL_RGX ]] || return 4$(
-    fail_repo "unsupported source URL syntax: $SRC_URL")
+    log_msg E "unsupported source URL syntax: $SRC_URL")
   local SRC_PROTO="${BASH_REMATCH[1]}"
   local SRC_HOST="${BASH_REMATCH[2]}"
   local SRC_PATH="${BASH_REMATCH[3]}"
@@ -299,11 +309,6 @@ function mirror_one_repo () {
 }
 
 
-function fail_repo () {
-  echo "E: $* @ dir '$REPO_DIR'" >&2
-}
-
-
 function sanity_check_dist_dirs () {
   local DIST= FN=
   local MISS=()
@@ -334,7 +339,7 @@ function dm_args_id_comma_list () {
       * ) echo "E: $FUNCNAME: unsupported item format: '$ARG'" >&2; return 3;;
     esac
   done
-  [ -n "$ARGS" ] || return 4$(fail_repo "no values for $OPT")
+  [ -n "$ARGS" ] || return 4$(log_msg E "no values for $OPT")
   [ -n "$SRC_OPT" ] || SRC_OPT='--nosource'
   [ "$LIST_OPT" == '--arch=' ] && DM_ARGS+=( "$SRC_OPT" )
   DM_ARGS+=( "$LIST_OPT${ARGS%,}" )
