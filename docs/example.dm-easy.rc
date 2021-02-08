@@ -49,7 +49,7 @@ fi
 
 # REPO_URL: path -> baseurl
 # Path is relative to config file; use "." for same directory.
-REPO_URL['go-git-service']='https://deb.packager.io/gh/pkgr/gogs/'
+REPO_URL['go-git-service']='https://dl.packager.io/srv/deb/gogs/gogs/main/ubuntu/'
 
 # Space and newline characters in URL are removed for easy multi-line:
 REPO_URL['phusion-passenger']='
@@ -77,7 +77,7 @@ done
 
 
 # Some other useful repos
-REPO_URL+=(
+REPO_URL+=( # ATTN: += is string append to those keys, not replace.
   [brave-browser]='https://brave-browser-apt-release.s3.brave.com/'
   [docker]='https://download.docker.com/linux/ubuntu'
   [microsoft_vscode]='https://packages.microsoft.com/repos/vscode/'
