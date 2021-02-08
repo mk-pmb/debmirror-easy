@@ -15,29 +15,46 @@ REPO_URL[.]="$SUBDIR_REPO_URL"
 
 local REPO_DIR="$(basename -- "$CFG_DIR")"
 # echo "repo dir: $REPO_DIR"
+
+
+# Repos with special dist names:
 case "$REPO_DIR" in
+  microsoft_vscode | \
+  //dist=stable// ) DISTS=( stable );;
+
   brave-browser )
-    DISTS+=( stable )
     # ATTN: The upstream repo has a "focal" dist as well, but that one is
     #   signed with key 4fe13824e3ffc656 which seems to be deprecated.
-    ;;
+    DISTS=( stable );;
+esac
 
-  docker )
-    COMPONENTS=( stable )
-    array_sed ARCHS -re '/^(i386)$/d'
-    ;;
 
-  # go-git-service )
-  #   array_sed DISTS -re '/^(xenial)$/d';;
+# Repos with special component names:
+case "$REPO_DIR" in
+  docker | \
+  //compo=stable// ) COMPONENTS=( stable );;
+esac
 
-  # nodejs-v[1-9][0-9] )
-  #   # Starting at v10, the i386 support declared in NodeSource's Release file
-  #   # is a lie. That's what you get for using unofficial install methods.
-  #   array_sed ARCHS -re '/^(i386)$/d';;
+
+# Repos with only a subset of CPU architectures:
+case "$REPO_DIR" in
+  docker | \
+  microsoft_vscode | \
+  waterfox-ubu* | \
+  //no-i386// ) array_sed ARCHS -re '/^(i386)$/d';;
+
+  nodejs-v[1-9][0-9] )
+    # Starting at v10, the i386 support declared in NodeSource's Release file
+    # is a lie. That's what you get for using unofficial install methods.
+    array_sed ARCHS -re '/^(i386)$/d';;
+esac
+
+
+# Very special snowflakes
+case "$REPO_DIR" in
 
   waterfox-ubu* )
     DISTS=( "xUbuntu_${REPO_DIR#*-ubu}" )
-    ARCHS=( amd64 )
     REPO_CFG[flatdir]=+
     export DM_EVAL_HTTPGET_MODIFY_URL='
       s~(/waterfox/[\w\.]+/)(dists/[\w\.]+/(main/binary-amd64/|)|)~$1~;
@@ -46,11 +63,10 @@ case "$REPO_DIR" in
     # also need symlinks for: all amd64 Packages* Release*
     ;;
 
-  microsoft_vscode | \
-  //stables// )
-    DISTS=( stable )
-    ;;
 esac
+
+
+
 
 
 
