@@ -19,20 +19,27 @@ local REPO_DIR="$(basename -- "$CFG_DIR")"
 
 # Repos with special dist names:
 case "$REPO_DIR" in
+
   microsoft_vscode | \
-  //dist=stable// ) DISTS=( stable );;
+  // ) DISTS=( stable );;
+
+  seamonkey | \
+  // ) DISTS=( all );;
 
   brave-browser )
     # ATTN: The upstream repo has a "focal" dist as well, but that one is
     #   signed with key 4fe13824e3ffc656 which seems to be deprecated.
     DISTS=( stable );;
+
 esac
 
 
 # Repos with special component names:
 case "$REPO_DIR" in
+
   docker | \
-  //compo=stable// ) COMPONENTS=( stable );;
+  // ) COMPONENTS=( stable );;
+
 esac
 
 
