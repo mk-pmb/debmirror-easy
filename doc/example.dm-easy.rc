@@ -85,6 +85,7 @@ REPO_URL+=( # ATTN: += is string append to those keys, not replace.
   [mumble]='ppa:mumble/release'
   [webupd8]='ppa:nilarimogard/webupd8'  # streamlink
   [winehq]='https://dl.winehq.org/wine-builds/ubuntu/'
+  [seamonkey]='http://downloads.sourceforge.net/project/ubuntuzilla/mozilla/apt'
   )
 
 
