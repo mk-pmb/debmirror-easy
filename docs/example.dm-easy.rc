@@ -67,8 +67,13 @@ done
 # Waterfox, rather than using a "dists" subdirectory in its repo,
 # has a separate repo per Ubuntu version.
 local WAFO_BASE='https://download'
-# WAFO_BASE+='content'
-# ^-- Temporarily uncomment if the regular mirrors are broken again.
+
+# Sometimes waterfox's official mirrors are broken for a month or so.
+# A workaround that usually works is to temporarily add "content":
+[ "$(date +%Y%m%d)" -lt 2021'02'01 ] && WAFO_BASE+='content'
+# (Changing it here only takes effect if/when you re-generate your
+# configs from the example files.)
+
 WAFO_BASE+='.opensuse.org/repositories/home:/hawkeye116477:/waterfox/xUbuntu_'
 local WAFO_UBU=
 for WAFO_UBU in {18..20..2}.04; do
