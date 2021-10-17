@@ -59,7 +59,7 @@ REPO_URL['phusion-passenger']='
 # local vars. If you need functions, start their name with "rc_".
 local NODE_BASE='https://deb.nodesource.com/node_'
 local NODE_VER=
-for NODE_VER in 10 12; do
+for NODE_VER in 12 16; do
   REPO_URL["nodejs-v$NODE_VER"]="$NODE_BASE${NODE_VER#0}.x/"
 done
 
