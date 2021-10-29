@@ -62,6 +62,15 @@ esac
 # Very special snowflakes
 case "$REPO_DIR" in
 
+  winehq )
+    # Bug found 2021-10-29 (https://bugs.winehq.org/show_bug.cgi?id=51947):
+    # Unfortunately, we have to choose between supporting either Ubuntu focal:
+    ARCHS+=( all )
+    array_sed DISTS -re '/^(bionic|xenial)$/d'
+    # or bionic and xenial:
+    # array_sed DISTS -re '/^(focal)$/d'
+    ;;
+
   waterfox-ubu* )
     DISTS=( "xUbuntu_${REPO_DIR#*-ubu}" )
     REPO_CFG[flatdir]=+
