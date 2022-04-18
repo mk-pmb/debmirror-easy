@@ -6,7 +6,7 @@ DISTS=(
   'Ubuntu 12.04       ' #precise
   'Ubuntu 14.04       ' #trusty
   'Ubuntu 16.04       ' #xenial
-  'Ubuntu 18.04       ' bionic
+  'Ubuntu 18.04       ' #bionic
   'Ubuntu 20.04       ' focal
   )
 
@@ -49,11 +49,11 @@ fi
 
 # REPO_URL: path -> baseurl
 # Path is relative to config file; use "." for same directory.
-REPO_URL['go-git-service']='https://dl.packager.io/srv/deb/gogs/gogs/main/ubuntu/'
+REPO_URL[winehq]='https://dl.winehq.org/wine-builds/ubuntu/'
 
 # Space and newline characters in URL are removed for easy multi-line:
-REPO_URL['phusion-passenger']='
-  https://oss-binaries.phusionpassenger.com/apt/passenger/'
+REPO_URL[seamonkey]='
+  http://downloads.sourceforge.net/project/ubuntuzilla/mozilla/apt'
 
 # The rc file is source-d in a bash function, so you can define your own
 # local vars. If you need functions, start their name with "rc_".
@@ -83,14 +83,15 @@ done
 
 # Some other useful repos
 REPO_URL+=( # ATTN: += is string append to those keys, not replace.
-  [brave-browser]='https://brave-browser-apt-release.s3.brave.com/'
   [docker]='https://download.docker.com/linux/ubuntu'
   [microsoft_vscode]='https://packages.microsoft.com/repos/vscode/'
   [minetest]='http://ppa.launchpad.net/minetestdevs/stable/ubuntu/'
   [mumble]='ppa:mumble/release'
-  [webupd8]='ppa:nilarimogard/webupd8'  # streamlink
-  [winehq]='https://dl.winehq.org/wine-builds/ubuntu/'
-  [seamonkey]='http://downloads.sourceforge.net/project/ubuntuzilla/mozilla/apt'
+  [webupd8]='ppa:nilarimogard/webupd8' # streamlink
+  # [brave-browser]='https://brave-browser-apt-release.s3.brave.com/'
+  # [go-git-service]='https://dl.packager.io/srv/deb/gogs/gogs/main/ubuntu/'
+  # [linux-surface]='https://pkg.surfacelinux.com/debian'
+  # [phusion-passenger]='https://oss-binaries.phusionpassenger.com/apt/passenger/'
   )
 
 
