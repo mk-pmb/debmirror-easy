@@ -128,6 +128,7 @@ function mirror_one_config () {
   local COMPONENTS=()
   local I18N_LANGS=()
   local ARCHS=()
+  local EXTRA_DM_OPTS=()
   local -A REPO_URL=()
   local GNUPGHOME=
 
@@ -260,6 +261,7 @@ function mirror_one_repo () {
     --ignore-small-errors
     --disable-ssl-verification
     --state-cache-days=2
+    "${EXTRA_DM_OPTS[@]}"
     )
 
   local DO_NOT_CLEANUP='--ignore'
