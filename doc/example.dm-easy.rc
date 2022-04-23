@@ -31,6 +31,11 @@ ARCHS=(
   amd64
   )
 
+EXTRA_DM_OPTS=(
+  # repo-specific options.
+  # see [example.subdir-defaults.rc](example.subdir-defaults.rc).
+  )
+
 
 # If your config shall not run on specific conditions,
 # just "return 0" without adding any REPO_URL[]s:

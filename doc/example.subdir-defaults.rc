@@ -86,6 +86,13 @@ case "$REPO_DIR" in
       --exotic=18.04
       );;
 
+  microsoft_vscode )
+    EXTRA_DM_OPTS+=(
+      --exclude-field=Package='^code-(exploration|insiders)$'
+      );;
+
+
+
 esac
 
 
