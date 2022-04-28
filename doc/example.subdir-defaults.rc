@@ -17,7 +17,7 @@ local REPO_DIR="$(basename -- "$CFG_DIR")"
 # echo "repo dir: $REPO_DIR"
 
 
-# Repos with special dist names:
+# Repos with special or additional dist names:
 case "$REPO_DIR" in
 
   microsoft_vscode | \
@@ -30,6 +30,14 @@ case "$REPO_DIR" in
     # ATTN: The upstream repo has a "focal" dist as well, but that one is
     #   signed with key 4fe13824e3ffc656 which seems to be deprecated.
     DISTS=( stable );;
+
+  docker | \
+  nodejs-v[1-9][0-9] | \
+  // )
+    DISTS+=(
+      # Entries with spaces are ignored, explained in example.dm-easy.rc
+      'Ubuntu 18.04       ' bionic
+    );;
 
 esac
 
