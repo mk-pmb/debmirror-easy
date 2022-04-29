@@ -27,7 +27,7 @@ Known issues
 ------------
 
 * `gzip: stdin: not in gzip format` / `Failed: gzip -d <.temp/dists/…`:
-  use [debmirror-pmb](https://github.com/mk-pmb/debmirror-pmb/issues/1).
+  Use https://github.com/mk-pmb/debmirror-salsa-22/tree/experimental .
 
 
 

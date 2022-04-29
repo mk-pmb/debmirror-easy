@@ -2,7 +2,7 @@
 
 local SUBDIR_REPO_URL="${REPO_URL[.]}"
 source -- "$DME_PATH/docs/example.dm-easy.rc" || return $?
-BETTER_DM="$DME_PATH/../debmirror-pmb/usr/bin/debmirror"
+BETTER_DM="$DME_PATH/../debmirror-salsa-22/debmirror"
 if [ -f "$BETTER_DM" ]; then DM_PROG=( perl "$BETTER_DM" ); fi
 
 GNUPGHOME='-'
