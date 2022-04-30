@@ -130,6 +130,9 @@ function mirror_one_config () {
   local ARCHS=()
   local EXTRA_DM_OPTS=()
   local -A REPO_URL=()
+  local -A REPO_OPT=(
+    [rsync_extra]='none'
+    )
   local GNUPGHOME=
 
   local COPROC=()  # child_stdout child_stdin (no stderr)
@@ -253,7 +256,7 @@ function mirror_one_repo () {
     --method="$SRC_PROTO" --host="$SRC_HOST" --root="$SRC_PATH"
     --passive
     --omit-suite-symlinks
-    --rsync-extra=none
+    --rsync-extra="${REPO_OPT[rsync_extra]}"
     --i18n --exclude='/Translation-(?!('"$I18N_RGX"')\b)\S*\.bz2$'
     # --checksums     # verify local file contents on each update check
     --ignore-missing-release
