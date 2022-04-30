@@ -119,7 +119,7 @@ function mirror_one_config () {
   local LOGS_DIR="$CFG_DIR/logs/"
   local LOG_SUBDIR="${LOG_TS:0:4}/"
   local LOG_BFN="dm-easy.$LOG_TS.$$.log"
-  mkdir -p "$LOGS_DIR$LOG_SUBDIR" || return $?
+  mkdir --parents -- "$LOGS_DIR$LOG_SUBDIR" || return $?
   local LOG_FN="$LOGS_DIR$LOG_SUBDIR$LOG_BFN"
   log_msg D "pid $$ @ $(hostname --fqdn), config file: $CFG_FN" || return $?
   rotate_log_symlinks
