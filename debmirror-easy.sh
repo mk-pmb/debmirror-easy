@@ -299,7 +299,7 @@ function mirror_one_repo () {
   else
     [ "${GNUPGHOME:0:1}" == / ] || GNUPGHOME="$PWD/$GNUPGHOME"
     if [ ! -f "$GNUPGHOME"/trustedkeys.gpg ]; then
-      log_msg W "No trustedkeys.gpg in $GNUPGHOME/." \
+      log_msg W "no trustedkeys.gpg in $GNUPGHOME/." \
         "Set GNUPGHOME='-' to disable this warning." \
         "(Use '-/' if that's your directory name.)"
       DM_ARGS+=( --no-check-gpg )
@@ -342,8 +342,8 @@ function sanity_check_dist_dirs () {
     FN="$REPO_DIR"/dists/"$DIST"/Release
     [ -f "$FN" ] || MISS+=( "$FN" )
   done
-  [ -z "${MISS[0]}" ] || log_msg W \
-    "Missing release files (check the logs for details): ${MISS[*]}"
+  [ -z "${MISS[0]}" ] || log_msg W "$FUNCNAME:" \
+    "missing release files (check the logs for details): ${MISS[*]}"
 }
 
 
