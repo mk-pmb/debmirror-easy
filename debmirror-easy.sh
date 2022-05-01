@@ -124,6 +124,21 @@ function mirror_one_config () {
   log_msg D "pid $$ @ $(hostname --fqdn), config file: $CFG_FN" || return $?
   rotate_log_symlinks
 
+  local MAX_ERR=0
+  local CFG_RERUN=
+  # see docs/reruns.md
+  mirror_one_config__rerun || return $?
+  for CFG_RERUN in $CFG_RERUN; do
+    [ -n "$CFG_RERUN" ] || continue
+    log_msg D "config rerun: $CFG_RERUN"
+    mirror_one_config__rerun || return $?
+  done
+
+  log_max_err "$FUNCNAME"; return $?
+}
+
+
+function mirror_one_config__rerun () {
   local DISTS=()
   local COMPONENTS=()
   local I18N_LANGS=()
@@ -141,7 +156,6 @@ function mirror_one_config () {
   local REPO_DIR=
   local SRC_URL=
   local REPO_ERR=
-  local MAX_ERR=0
   for REPO_DIR in "${!REPO_URL[@]}"; do
     SRC_URL="${REPO_URL[$REPO_DIR]}"
     SRC_URL="${SRC_URL// /}"
@@ -151,8 +165,6 @@ function mirror_one_config () {
     [ "$REPO_ERR" -gt "$MAX_ERR" ] && MAX_ERR="$REPO_ERR"
   done
   [ -n "$REPO_ERR" ] || log_msg W 'no repos defined'
-
-  log_max_err "$FUNCNAME"; return $?
 }
 
 
