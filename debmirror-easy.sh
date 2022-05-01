@@ -147,6 +147,7 @@ function mirror_one_config__rerun () {
   local -A REPO_URL=()
   local -A REPO_OPT=(
     [rsync_extra]='none'
+    [expunge_other_dists]='yes'
     )
   local GNUPGHOME=
 
@@ -311,6 +312,7 @@ function mirror_one_repo () {
     $DO_NOT_CLEANUP='^logs/'
     $DO_NOT_CLEANUP='^[^/]+\.rc$'
     )
+  maybe_expunge_other_dists || return $?
 
   [ -n "$GNUPGHOME" ] || local GNUPGHOME='gnupg_home'
   if [ "$GNUPGHOME" == - ]; then
@@ -363,6 +365,43 @@ function check_unsupported_repo_opts () {
   [ "${#BAD[@]}" == 0 ] && return 0
   log_msg E "unsupported REPO_OPT option(s) (typo?): ${BAD[*]}"
   return 3
+}
+
+
+function maybe_expunge_other_dists () {
+  local KEY='expunge_other_dists'
+  local VAL="${REPO_OPT[$KEY]}"
+  case "$VAL" in
+    yes )
+      # This is DM's default behavior.
+      return 0;;
+    no ) ;;
+    * )
+      log_msg E "option REPO_OPT[$KEY] must be either 'yes' or 'no'."
+      return 3;;
+  esac
+
+  # Construct regexp for enabled dists:
+  local CUR="${DISTS[*]}"
+  CUR="${CUR// /,}"
+  local ACCEPTABLE_CHARS='A-Za-z0-9_-'
+  local ERR=
+  case ",$CUR," in
+    ,, ) ERR='is empty';;
+    *,,* ) ERR='includes an empty item';;
+    * )
+      ERR="${CUR//[,$ACCEPTABLE_CHARS]/}"
+      [ -z "$ERR" ] || ERR="contains unsupported characters: '$ERR'";;
+  esac
+  if [ -n "$ERR" ]; then
+    log_msg E "$FUNCNAME: cannot construct regexp: List of dists $ERR"
+    return 3
+  fi
+  CUR="(?:${CUR//,/|})"
+
+  # Negate that to construct a regexp of all other dists:
+  local OTHERS='^(?:\.temp/|)dists/(?!'"$CUR"'/)'
+  DM_ARGS+=( --ignore="$OTHERS" )
 }
 
 
