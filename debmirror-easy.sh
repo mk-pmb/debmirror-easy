@@ -135,19 +135,8 @@ function mirror_one_config () {
     )
   local GNUPGHOME=
 
-  local COPROC=()  # child_stdout child_stdin (no stderr)
-  local COPROC_PID=
-  coproc log_msg --stdin W config:
-  local CFG_RV=
-  local LOG_RV=
-  source_in_func ./"$CFG_BFN" --dm-easy-rc >&"${COPROC[1]}" 2>&1
-  CFG_RV=$?
-  exec {COPROC[1]}<&-   # close coproc child's stdin
-  wait
-  if [ "$CFG_RV" != 0 ]; then
-    log_msg E "config returned error code $CFG_RV"
-    return "$CFG_RV"
-  fi
+  log_redir_subtask W 'config' \
+    source_in_func ./"$CFG_BFN" --dm-easy-rc || return $?
 
   local REPO_DIR=
   local SRC_URL=
@@ -164,6 +153,22 @@ function mirror_one_config () {
   [ -n "$REPO_ERR" ] || log_msg W 'no repos defined'
 
   log_max_err "$FUNCNAME"; return $?
+}
+
+
+function log_redir_subtask () {
+  local LOG_LEVEL="$1"; shift
+  local TASK_DESCR="$1"; shift
+  local COPROC=()  # child_stdout child_stdin (no stderr)
+  local COPROC_PID=
+  coproc log_msg --stdin "$LOG_LEVEL" "$TASK_DESCR:"
+  local TASK_RV=
+  "$@" >&"${COPROC[1]}" 2>&1
+  TASK_RV=$?
+  exec {COPROC[1]}<&-   # close coproc child's stdin
+  wait
+  [ "$TASK_RV" == 0 ] || log_msg E "$TASK_DESCR returned error code $TASK_RV"
+  return "$TASK_RV"
 }
 
 
@@ -189,12 +194,12 @@ function log_msg () {
   local LVL="$1"; shift
   local MSG=
   if [ "$LVL" == --stdin ]; then
-    while read -d $'\n' -r -s MSG; do
+    while IFS= read -d $'\n' -r -s MSG; do
       "$FUNCNAME" "$@" "$MSG" || return $?
     done
     return 0
   fi
-  MSG="$(date +'%y%m%d-%H%M%S') $LVL: $*"
+  printf -v MSG -- '%(%y%m%d-%H%M%S)T %s' -1 "$LVL: $*"
   local CFG_NAME_HINT=
   [ "$CFG_NAME" == $'\r' ] || CFG_NAME_HINT=" [@${CFG_NAME:-E_NO_CONFIG}]"
   case "$LVL" in
