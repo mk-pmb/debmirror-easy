@@ -277,7 +277,7 @@ function mirror_one_repo () {
     $DO_NOT_CLEANUP='^(?!(pool|dists|project|\.temp)/)'
     # make assurance double sure for most important files:
     $DO_NOT_CLEANUP='^logs/'
-    $DO_NOT_CLEANUP='^dm-easy\.rc$/'
+    $DO_NOT_CLEANUP='^[^/]+\.rc$'
     )
 
   [ -n "$GNUPGHOME" ] || local GNUPGHOME='gnupg_home'
