@@ -165,6 +165,24 @@ function mirror_one_config__rerun () {
     [ "$REPO_ERR" -gt "$MAX_ERR" ] && MAX_ERR="$REPO_ERR"
   done
   [ -n "$REPO_ERR" ] || log_msg W 'no repos defined'
+
+  mirror_one_config__hook on_config_done D || return $?
+}
+
+
+function mirror_one_config__hook () {
+  local HOOK_EVT="$1"; shift
+  local LOG_LEVEL="$1"; shift
+  local HOOK_CMD="${REPO_OPT[$HOOK_EVT]}"
+  case "$HOOK_CMD" in
+    '' ) return 0;;
+    --* ) HOOK_CMD='source_in_func ./"$CFG_BFN" '"$HOOK_CMD";;
+  esac
+  log_msg P "run $HOOK_EVT hook: $HOOK_CMD"
+  log_redir_subtask "$LOG_LEVEL" "$HOOK_EVT" eval "$HOOK_CMD"
+  local HOOK_RV="$?"
+  log_msg P "done $HOOK_EVT hook, rv=$HOOK_RV"
+  return "$HOOK_RV"
 }
 
 
