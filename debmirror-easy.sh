@@ -360,7 +360,15 @@ function sanity_check_dist_dirs () {
     FN="$REPO_DIR"/dists/"$DIST"/Release
     [ -f "$FN" ] || MISS+=( "$FN" )
   done
-  [ -z "${MISS[0]}" ] || log_msg W "$FUNCNAME:" \
+
+  local NO_PKG="$(tail --lines=5 -- "$LOG_FN" \
+    | grep -Fe ' dm: No packages after parsing Packages and Sources files')"
+  NO_PKG="${NO_PKG##*: }"
+  [ -z "$NO_PKG" ] || MISS+=(
+    "(Missing release files are probably due to earlier error: '$NO_PKG')" )
+
+  [ -n "${MISS[0]}" ] || return 0
+  log_msg W "$FUNCNAME:" \
     "missing release files (check the logs for details): ${MISS[*]}"
 }
 
