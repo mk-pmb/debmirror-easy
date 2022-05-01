@@ -286,6 +286,8 @@ function mirror_one_repo () {
     )
   [ "$DBGLV" -ge 4 ] && DM_ARGS+=( --debug )
 
+  check_unsupported_repo_opts || return $?
+
   [ "$SRC_PATH" == / ] || SRC_PATH="${SRC_PATH%/}"
   DM_ARGS+=(
     --method="$SRC_PROTO" --host="$SRC_HOST" --root="$SRC_PATH"
@@ -346,6 +348,21 @@ function mirror_one_repo () {
 
   log_msg P "debmirror retval=$DM_RV"
   return "$DM_RV"
+}
+
+
+function check_unsupported_repo_opts () {
+  local KEY=
+  for KEY in "${!REPO_OPT[@]}"; do case "$KEY" in
+    expunge_other_dists | \
+    on_config_done | \
+    rsync_extra | \
+    '' ) ;;
+    * ) BAD+=( "$KEY" );;
+  esac; done
+  [ "${#BAD[@]}" == 0 ] && return 0
+  log_msg E "unsupported REPO_OPT option(s) (typo?): ${BAD[*]}"
+  return 3
 }
 
 
