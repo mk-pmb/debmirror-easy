@@ -1,0 +1,4 @@
+# -*- coding: utf-8, tab-width: 2, syntax: bash -*-
+
+source -- "$CFG_DIR/doubt_no_all.rc" || return $?
+ARCHS+=( all )

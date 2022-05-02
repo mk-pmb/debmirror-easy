@@ -1,0 +1,20 @@
+# -*- coding: utf-8, tab-width: 2, syntax: bash -*-
+
+[ -x tmp.debmirror ] && DM_PROG=( ./tmp.debmirror )
+GNUPGHOME='-'
+
+REPO_URL[.]='https://dl.winehq.org/wine-builds/ubuntu/'
+
+DISTS=( trusty focal )
+COMPONENTS=( main )
+I18N_LANGS=( en )
+ARCHS=( i386 )
+
+EXTRA_DM_OPTS+=(
+  # To save traffic, exclude most packages, especially the big ones.
+  # We can't just exclude all of them because for a successful mirror,
+  # we have to download at least one package.
+  --exclude=$'/binary-\w+/(?!wine\-stable_4\.0(?:\~trusty|\.4\~focal))'$(
+    )'wine(hq|)-(devel|stable|staging)[_-]'
+  --exclude='/(lib|)vkd3d'
+  )
