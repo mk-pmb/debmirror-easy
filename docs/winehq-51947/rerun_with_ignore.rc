@@ -1,0 +1,33 @@
+# -*- coding: utf-8, tab-width: 2, syntax: bash -*-
+
+source -- "$CFG_DIR/doubt_no_all.rc" || return $?
+
+function rerun_with_ignore__list_files () {
+  local RERUN_ID="$1"
+  find dists/ -type f | sort --version-sort \
+    >"tmp.$FUNCNAME.${RERUN_ID:-1}.txt"
+}
+# At the time the hook will run, the initial run will already have
+# overwritten CFG_RERUN, so we have to hard-code it into the hook
+# before we do overwrite it.
+REPO_OPT[on_config_done]="rerun_with_ignore__list_files $CFG_RERUN"
+
+REPO_OPT[expunge_other_dists]='no'
+
+case "$CFG_RERUN" in
+
+  initial_again | \
+  '' )
+    CFG_RERUN='pre-focal initial_again'
+    DISTS=( focal jammy )
+    ARCHS+=( all )
+    ;;
+
+  pre-focal )
+    DISTS=( trusty xenial bionic )
+    export DM_EVAL_HTTPGET_MODIFY_URL='
+      s~^(.*)(dists/\w+/main/binary-all/Packages\.gz)$~data:text/plain,~;
+      '
+    ;;
+
+esac

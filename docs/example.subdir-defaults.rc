@@ -71,20 +71,30 @@ esac
 case "$REPO_DIR" in
 
   winehq )
-    # Bug found 2021-10-29 (https://bugs.winehq.org/show_bug.cgi?id=51947):
-    # Unfortunately, we have to choose between supporting either Ubuntu focal:
-    ARCHS+=( all )
-    array_sed DISTS -re '/^(bionic|xenial)$/d'
-    # or bionic and xenial:
-    # array_sed DISTS -re '/^(focal)$/d'
+    # For explanation, see winehq-51947/README.md
+    case "$CFG_RERUN" in
+      '' )
+        CFG_RERUN='pre-focal'
+        ARCHS+=( all )
+        ;;
+      pre-focal )
+        DISTS=(
+          trusty
+          # xenial
+          # bionic
+          )
+        export DM_EVAL_HTTPGET_MODIFY_URL='
+          s~^(.*)(dists/\w+/main/binary-all/Packages\.gz)$~data:text/plain,~;'
+        ;;
+
+    esac
     ;;
 
   waterfox-ubu* )
     DISTS=( "xUbuntu_${REPO_DIR#*-ubu}" )
     REPO_CFG[flatdir]=+
     export DM_EVAL_HTTPGET_MODIFY_URL='
-      s~(/waterfox/[\w\.]+/)(dists/[\w\.]+/(main/binary-amd64/|)|)~$1~;
-      '
+      s~(/waterfox/[\w\.]+/)(dists/[\w\.]+/(main/binary-amd64/|)|)~$1~;'
     # On the mirror webspace, additionally to the "dists" symlink, you'll
     # also need symlinks for: all amd64 Packages* Release*
     ;;
