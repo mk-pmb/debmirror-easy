@@ -443,7 +443,7 @@ function dm_args_id_comma_list () {
       * ) echo "E: $FUNCNAME: unsupported item format: '$ARG'" >&2; return 3;;
     esac
   done
-  [ -n "$ARGS" ] || return 4$(log_msg E "no values for $OPT")
+  [ -n "$ARGS" ] || return 4$(log_msg E "no values for $LIST_OPT")
   [ -n "$SRC_OPT" ] || SRC_OPT='--nosource'
   [ "$LIST_OPT" == '--arch=' ] && DM_ARGS+=( "$SRC_OPT" )
   DM_ARGS+=( "$LIST_OPT${ARGS%,}" )
