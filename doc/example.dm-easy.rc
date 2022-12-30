@@ -8,6 +8,7 @@ DISTS=(
   'Ubuntu 16.04       ' #xenial
   'Ubuntu 18.04       ' #bionic
   'Ubuntu 20.04       ' focal
+  'Ubuntu 22.04       ' jammy
   )
 
 COMPONENTS=(  # --section=
