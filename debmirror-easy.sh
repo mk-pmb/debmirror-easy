@@ -18,6 +18,8 @@ function debmirror_easy () {
   local LNBUF_CMD=()
   LANG=C stdbuf --help 2>&1 | grep -m 1 -qPie '\bline[ -]?buffered\b' \
     && LNBUF_CMD=( stdbuf --{output,error}=L )
+  local LOG_HOST="$(hostname --fqdn)" # <- local config files may optimize it.
+  read_early_local_config || return $?
 
   dme_cli_run "$@"
   return $?
@@ -121,7 +123,7 @@ function mirror_one_config () {
   local LOG_BFN="dm-easy.$LOG_TS.$$.log"
   mkdir --parents -- "$LOGS_DIR$LOG_SUBDIR" || return $?
   local LOG_FN="$LOGS_DIR$LOG_SUBDIR$LOG_BFN"
-  log_msg D "pid $$ @ $(hostname --fqdn), config file: $CFG_FN" || return $?
+  log_msg D "pid $$ @ $LOG_HOST, config file: $CFG_FN" || return $?
   rotate_log_symlinks
 
   local MAX_ERR=0
@@ -341,6 +343,7 @@ function mirror_one_repo () {
   log_msg D "line-buffer adjustor: $(debug_shell_cmd -1 "${LNBUF_CMD[@]}")"
   log_msg D "debmirror prog: $(debug_shell_cmd -1 "${DM_PROG[@]}")"
   log_msg D "debmirror args: $(debug_shell_cmd -1 "${DM_ARGS[@]}")"
+  log_msg D "DM_EVAL_HTTPGET_MODIFY_URL: $DM_EVAL_HTTPGET_MODIFY_URL"
   local DM_RV=skipped
   "${LNBUF_CMD[@]}" "${DM_PROG[@]}" "${DM_ARGS[@]}" \
     2>&1 | log_msg --stdin D dm:
@@ -469,6 +472,18 @@ function debug_shell_cmd () {
   printf '%s\n' "$@" | sed -re '
     /[^A-Za-z0-9,\/.=-]/s~^([A-Za-z-]+=|)|$~&\x27~g
     1!s~^~  ~'
+}
+
+
+function read_early_local_config () {
+  local CFG_FN=
+  for CFG_FN in "$DME_PATH"/local/{cfg/,*.cfg/}; do
+    for CFG_FN in "${CFG_FN%/}"/*.rc; do
+      [ -f "$CFG_FN" ] || continue
+      source_in_func "$CFG_FN" || return $?$(
+        echo "Config failed: $CFG_FN: rv=$?" >&2)
+    done
+  done
 }
 
 
