@@ -12,7 +12,7 @@ https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-all/ .
 But if I do so, bionic and xenial fail becuase they don't have a
 main/binary-all directory.
 Could you please create those and put a dummy placeholder file in?
-```text
+```
 
 
 
@@ -73,7 +73,7 @@ __Strategy:__
 Run debmirror multiple times, once for each combination of
 distros and architectures,
 re-using the same target directory.
-To facilitate this, I added the [reruns feature](reruns.md) to DME.
+To facilitate this, I added the [reruns feature](../reruns.md) to DME.
 
 __Benefits:__
 Semi-easy and seems to work.
