@@ -1,5 +1,7 @@
 # -*- coding: utf-8, tab-width: 2, syntax: bash -*-
 
+export DM_EVAL_HTTPGET_MODIFY_URL=
+
 DISTS=(
   # Entries that contain spaces and/or "#" are ignored.
   # You can use this to help your editor sort lines by version number:
