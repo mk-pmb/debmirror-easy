@@ -82,6 +82,15 @@ case "$REPO_DIR" in
 esac
 
 
+# Some repos seem to have died or moved before jammy.
+case "$REPO_DIR" in
+
+  mumble | \
+  . ) array_sed DISTS -re '/^(jammy|noble)$/d';;
+
+esac
+
+
 # Very special snowflakes
 case "$REPO_DIR" in
 
