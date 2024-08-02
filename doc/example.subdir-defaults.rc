@@ -87,6 +87,16 @@ case "$REPO_DIR" in
   mumble | \
   . ) array_sed DISTS -re '/^(jammy|noble)$/d';;
 
+
+  docker )
+    # 2024-08-02: The docker pseudo-death is a special case: The files
+    #   https://download.docker.com/linux/ubuntu/dists/jammy/Release
+    #   https://download.docker.com/linux/ubuntu/dists/noble/Release
+    #   clearly exist online, and wget can download them, but debmirror
+    #   fails to fetch them, and will ignore them even if I download them
+    #   manually and put them into the expected directory.
+    array_sed DISTS -re '/^(jammy|noble)$/d';;
+
 esac
 
 
