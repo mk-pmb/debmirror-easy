@@ -36,7 +36,7 @@ case "$REPO_DIR" in
   // )
     DISTS+=(
       # Entries with spaces are ignored, explained in example.dm-easy.rc
-      'Ubuntu 18.04       ' bionic
+      # 'Ubuntu 18.04       ' bionic
     );;
 
 esac
