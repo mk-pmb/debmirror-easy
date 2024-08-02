@@ -1,5 +1,5 @@
 { "name": "debmirror-easy",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "Helps me mirror Debian package repositories.",
   "keywords": [
     "debmirror"
