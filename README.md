@@ -19,6 +19,28 @@ Usage
 [example daily cron job](docs/example.cron.txt)
 
 
+Installation
+------------
+
+* Use Ubuntu 22.04 or later.
+* Clone this repo.
+* Install these apt packages
+  (you can use [`util/install_deps.sh`](util/install_deps.sh) to do that):
+
+<!--#include file="util/install_deps.sh" outdent="    " code="text"
+  start="  local PKG=(" stop="  )" -->
+<!--#verbatim lncnt="5" -->
+```text
+liblockfile-simple-perl
+libstring-shellquote-perl
+libwww-perl   # LWP::UserAgent
+```
+<!--/include-->
+
+* That should be all.
+
+
+
 <!--#toc stop="scan" -->
 
 
