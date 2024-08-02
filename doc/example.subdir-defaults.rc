@@ -31,7 +31,6 @@ case "$REPO_DIR" in
     #   signed with key 4fe13824e3ffc656 which seems to be deprecated.
     DISTS=( stable );;
 
-  docker | \
   nodejs-v[1-9][0-9] | \
   // )
     DISTS+=(
