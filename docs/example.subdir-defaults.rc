@@ -67,6 +67,21 @@ case "$REPO_DIR" in
 esac
 
 
+# Nowadays, most repos need the binary-all work-around:
+case "$REPO_DIR" in
+
+  microsoft_vscode | \
+  winehq | \
+  . ) ;;  # Repos that don't need it.
+
+  * )
+    export DM_EVAL_HTTPGET_MODIFY_URL='
+      s~^(.*)(dists/\w+/main/binary-all/Packages\.gz)$~data:text/plain,~;'
+    ;;
+
+esac
+
+
 # Very special snowflakes
 case "$REPO_DIR" in
 
