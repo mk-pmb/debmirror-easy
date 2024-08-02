@@ -95,7 +95,6 @@ REPO_URL+=( # ATTN: += is string append to those keys, not replace.
   [microsoft_vscode]='https://packages.microsoft.com/repos/vscode/'
   [minetest]='http://ppa.launchpad.net/minetestdevs/stable/ubuntu/'
   [mumble]='ppa:mumble/release'
-  [webupd8]='ppa:nilarimogard/webupd8' # streamlink
   # [brave-browser]='https://brave-browser-apt-release.s3.brave.com/'
   # [go-git-service]='https://dl.packager.io/srv/deb/gogs/gogs/main/ubuntu/'
   # [linux-surface]='https://pkg.surfacelinux.com/debian'
