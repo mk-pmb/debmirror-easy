@@ -85,7 +85,7 @@ local WAFO_BASE='https://download'
 
 WAFO_BASE+='.opensuse.org/repositories/home:/hawkeye116477:/waterfox/xUbuntu_'
 local WAFO_UBU=
-for WAFO_UBU in {18..20..2}.04; do
+for WAFO_UBU in $( seq -f '%g.04' 18 2 $(date +%y) ); do
   REPO_URL["waterfox-ubu$WAFO_UBU"]="${WAFO_BASE}${WAFO_UBU}/"
 done
 
