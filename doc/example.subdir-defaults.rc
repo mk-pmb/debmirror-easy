@@ -32,10 +32,10 @@ case "$REPO_DIR" in
     DISTS=( stable );;
 
   nodejs-v[1-9][0-9] | \
-  // )
-    DISTS+=(
-      # Entries with spaces are ignored, explained in example.dm-easy.rc
-      # 'Ubuntu 18.04       ' bionic
+  // ) DISTS=(
+    # according to https://github.com/nodesource/distributions/wiki/
+    # Repository-Manual-Installation
+    nodistro
     );;
 
 esac
