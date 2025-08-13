@@ -94,7 +94,7 @@ done
 REPO_URL+=( # ATTN: += is string append to those keys, not replace.
   [docker]='https://download.docker.com/linux/ubuntu'
   [microsoft_vscode]='https://packages.microsoft.com/repos/vscode/'
-  [minetest]='http://ppa.launchpad.net/minetestdevs/stable/ubuntu/'
+  [minetest]='ppa:minetestdevs/stable'
   [mumble]='ppa:mumble/release'
   # [brave-browser]='https://brave-browser-apt-release.s3.brave.com/'
   # [go-git-service]='https://dl.packager.io/srv/deb/gogs/gogs/main/ubuntu/'
