@@ -5,8 +5,17 @@
 function gen_configs () {
   local SELFFILE="$(readlink -m -- "$BASH_SOURCE")"
   local SELFPATH="$(dirname -- "$SELFFILE")"
+  local DME_BASE="$(dirname -- "$SELFPATH")"
   local SELFNAME="$(basename -- "$SELFFILE")"
   local BANNER="Created using $SELFNAME with WWW_DIR=$WWW_DIR"
+
+  local CWD_ABS="$(readlink -m .)"
+  case "$CWD_ABS/" in
+    "$DME_BASE/"* )
+      echo E: "Flinching from generating configs into the DME repo itself." \
+        "(Destination = current working directory = $PWD)" >&2
+      return 4;;
+  esac
 
   local DF_RC='defaults.rc'
   [ -e "$DF_RC" ] || [ -L "$DF_RC" ] \
