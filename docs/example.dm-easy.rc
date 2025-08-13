@@ -92,6 +92,7 @@ done
 
 # Some other useful repos
 REPO_URL+=( # ATTN: += is string append to those keys, not replace.
+  [ansible]='ppa:ansible/ansible'
   [docker]='https://download.docker.com/linux/ubuntu'
   [microsoft_vscode]='https://packages.microsoft.com/repos/vscode/'
   [mumble]='ppa:mumble/release'
