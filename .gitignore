@@ -1,3 +1,9 @@
 
+# Site-local files
+/*.@*
 /local
 /site
+
+
+
+# Unsorted stuff (this section should be empty):
